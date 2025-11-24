@@ -1,0 +1,15 @@
+C:\Users\Nata\Desktop\TEST\test2\bin\Debug\net10.0\test2.exe
+C:\Users\Nata\Desktop\TEST\test2\bin\Debug\net10.0\test2.deps.json
+C:\Users\Nata\Desktop\TEST\test2\bin\Debug\net10.0\test2.runtimeconfig.json
+C:\Users\Nata\Desktop\TEST\test2\bin\Debug\net10.0\test2.dll
+C:\Users\Nata\Desktop\TEST\test2\bin\Debug\net10.0\test2.pdb
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.AssemblyInfoInputs.cache
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.AssemblyInfo.cs
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.csproj.CoreCompileInputs.cache
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.sourcelink.json
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.dll
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\refint\test2.dll
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.pdb
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\test2.genruntimeconfig.cache
+C:\Users\Nata\Desktop\TEST\test2\obj\Debug\net10.0\ref\test2.dll

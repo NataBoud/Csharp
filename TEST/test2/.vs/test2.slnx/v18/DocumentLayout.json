@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Nata\\Desktop\\TEST\\test2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5AC9052D-01CB-4A03-816C-4EDAB7B7D3F3}|test2.csproj|c:\\users\\nata\\desktop\\test\\test2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5AC9052D-01CB-4A03-816C-4EDAB7B7D3F3}|test2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5AC9052D-01CB-4A03-816C-4EDAB7B7D3F3}|test2.csproj|c:\\users\\nata\\desktop\\test\\test2\\classes\\watertank.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5AC9052D-01CB-4A03-816C-4EDAB7B7D3F3}|test2.csproj|solutionrelative:classes\\watertank.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "WaterTank.cs",
+              "DocumentMoniker": "C:\\Users\\Nata\\Desktop\\TEST\\test2\\Classes\\WaterTank.cs",
+              "RelativeDocumentMoniker": "Classes\\WaterTank.cs",
+              "ToolTip": "C:\\Users\\Nata\\Desktop\\TEST\\test2\\Classes\\WaterTank.cs",
+              "RelativeToolTip": "Classes\\WaterTank.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAswBwAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T13:06:09.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Nata\\Desktop\\TEST\\test2\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Nata\\Desktop\\TEST\\test2\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAADwv1YAAABpAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T12:23:07.652Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
