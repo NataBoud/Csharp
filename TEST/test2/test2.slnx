@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="../ExSalarie/ExSalarie.csproj" Id="d505b17d-0508-4dfd-8df0-43b94c1a9294" />
+  <Project Path="../exSalariesAvecHeritage/exSalariesAvecHeritage.csproj" Id="658321ed-5630-47a0-a42a-9922372d1a1d" />
   <Project Path="test2.csproj" />
 </Solution>

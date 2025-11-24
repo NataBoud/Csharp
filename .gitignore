@@ -1,0 +1,22 @@
+# Build Folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# DotNet
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.vsix
+*.nuget
