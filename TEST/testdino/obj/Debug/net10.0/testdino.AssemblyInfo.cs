@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("testdino")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd744b704bcec684b557e7d591c376c17169d418")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a880366d017c1d8dc389b14b43fbaa0e8a652cf")]
 [assembly: System.Reflection.AssemblyProductAttribute("testdino")]
 [assembly: System.Reflection.AssemblyTitleAttribute("testdino")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
