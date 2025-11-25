@@ -6,7 +6,10 @@ namespace ExFigure
 {
     internal class IHM
     {
-        private List<Figure> figures = new List<Figure>();
+        // IDE0044: Rendre le champ readonly
+        // IDE0028: L'initialisation des collections peut être simplifiée
+        // IDE0090: L'expression 'new' peut être simplifiée
+        private readonly List<Figure> figures = [];
 
         // Méthode pour démarrer l'IHM
         public void Start()
