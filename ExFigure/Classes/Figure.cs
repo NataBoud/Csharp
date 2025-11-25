@@ -20,6 +20,23 @@ namespace ExFigure.Classes
             Origine.PosY += deltaY;
         }
 
+        // Méthode statique pour afficher une liste de figures
+        public static void AfficherFigures(List<Figure> figures)
+        {
+            if (figures.Count == 0)
+            {
+                Console.WriteLine("Aucune figure enregistrée !");
+                return;
+            }
+
+            Console.WriteLine("\nListe des figures :");
+            for (int i = 0; i < figures.Count; i++)
+            {
+                Console.WriteLine($"{i + 1} - {figures[i]}");
+            }
+        }
+
+
         public abstract override string ToString();
     }
 }

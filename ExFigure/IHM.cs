@@ -35,7 +35,7 @@ namespace ExFigure
                         figures.Add(Triangle.AjouterTriangle());
                         break;
                     case "4":
-                        AfficherFigures();
+                        Figure.AfficherFigures(figures);
                         break;
                     case "5":
                         DeplacerFigure();
@@ -49,20 +49,6 @@ namespace ExFigure
             }
         }
 
-        private void AfficherFigures()
-        {
-            if (figures.Count == 0)
-            {
-                Console.WriteLine("Aucune figure enregistrée !");
-                return;
-            }
-
-            Console.WriteLine("\nListe des figures :");
-            for (int i = 0; i < figures.Count; i++)
-            {
-                Console.WriteLine($"{i + 1} - {figures[i]}");
-            }
-        }
 
         private void DeplacerFigure()
         {
@@ -72,7 +58,7 @@ namespace ExFigure
                 return;
             }
 
-            AfficherFigures();
+            Figure.AfficherFigures(figures);
             Console.Write("Sélectionnez une figure par numéro : ");
             if (!int.TryParse(Console.ReadLine(), out int index) || index < 1 || index > figures.Count)
             {
