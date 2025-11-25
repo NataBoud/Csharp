@@ -1,84 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\test2\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{658321ED-5630-47A0-A42A-9922372D1A1D}|..\\exSalariesAvecHeritage\\exSalariesAvecHeritage.csproj|c:\\users\\nata\\desktop\\csharp\\test\\exsalariesavecheritage\\classe\\commercial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{658321ED-5630-47A0-A42A-9922372D1A1D}|..\\exSalariesAvecHeritage\\exSalariesAvecHeritage.csproj|c:\\users\\nata\\desktop\\csharp\\test\\exsalariesavecheritage\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{658321ED-5630-47A0-A42A-9922372D1A1D}|..\\exSalariesAvecHeritage\\exSalariesAvecHeritage.csproj|c:\\users\\nata\\desktop\\csharp\\test\\exsalariesavecheritage\\classe\\salarie.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D505B17D-0508-4DFD-8DF0-43B94C1A9294}|..\\ExSalarie\\ExSalarie.csproj|c:\\users\\nata\\desktop\\csharp\\test\\exsalarie\\classes\\salarie.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\exSalariesAvecHeritage\\Program.cs",
-              "RelativeDocumentMoniker": "..\\exSalariesAvecHeritage\\Program.cs",
-              "ToolTip": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\exSalariesAvecHeritage\\Program.cs",
-              "RelativeToolTip": "..\\exSalariesAvecHeritage\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T14:41:33.688Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Commercial.cs",
-              "DocumentMoniker": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\exSalariesAvecHeritage\\Classe\\Commercial.cs",
-              "RelativeDocumentMoniker": "..\\exSalariesAvecHeritage\\Classe\\Commercial.cs",
-              "ToolTip": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\exSalariesAvecHeritage\\Classe\\Commercial.cs",
-              "RelativeToolTip": "..\\exSalariesAvecHeritage\\Classe\\Commercial.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBQAAAA+AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T14:38:12.606Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Salarie.cs",
-              "DocumentMoniker": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\ExSalarie\\Classes\\Salarie.cs",
-              "RelativeDocumentMoniker": "..\\ExSalarie\\Classes\\Salarie.cs",
-              "ToolTip": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\ExSalarie\\Classes\\Salarie.cs",
-              "RelativeToolTip": "..\\ExSalarie\\Classes\\Salarie.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T14:33:47.843Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Salarie.cs",
-              "DocumentMoniker": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\exSalariesAvecHeritage\\Classe\\Salarie.cs",
-              "RelativeDocumentMoniker": "..\\exSalariesAvecHeritage\\Classe\\Salarie.cs",
-              "ToolTip": "C:\\Users\\Nata\\Desktop\\Csharp\\TEST\\exSalariesAvecHeritage\\Classe\\Salarie.cs",
-              "RelativeToolTip": "..\\exSalariesAvecHeritage\\Classe\\Salarie.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAswDYAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T14:33:05.879Z",
-              "EditorCaption": ""
-            }
-          ]
-        }
-      ]
+      "DocumentGroups": []
     }
   ]
 }
