@@ -1,95 +1,77 @@
 ﻿using Microsoft.Data.SqlClient;
+using ADONET.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace ADONET
+namespace ADONET.Repositories
 {
-    internal class Etudiant
+    internal class EtudiantRepository
     {
-        private static readonly string connectionString =
+        private readonly string connectionString =
             "Data Source=(localdb)\\CoursSQL;Initial Catalog=CoursSQL;Integrated Security=True";
 
-        public int Id { get; set; }
-        public string Nom { get; set; } = "";
-        public string Prenom { get; set; } = "";
-        public int NumeroClasse { get; set; }
-        public DateTime? DateDiplome { get; set; }
-
-        public Etudiant() { }
-
-
-        public Etudiant(string nom, string prenom, int numeroClasse, DateTime? dateDiplome)
-        {
-            Nom = nom;
-            Prenom = prenom;
-            NumeroClasse = numeroClasse;
-            DateDiplome = dateDiplome;
-        }
-
-
         // -------------------------
-        //  SAVE = insert ou update
+        // INSERT ou UPDATE
         // -------------------------
-        public bool Save()
+        public bool Save(Etudiant etu)
         {
             using SqlConnection conn = new SqlConnection(connectionString);
             conn.Open();
 
             SqlCommand cmd;
 
-            if (Id == 0) // INSERT
+            if (etu.Id == 0) // INSERT
             {
                 cmd = new SqlCommand(
                     @"INSERT INTO Etudiant (nom, prenom, numero_classe, date_diplome)
-                  VALUES (@nom, @prenom, @classe, @date);
-                  SELECT SCOPE_IDENTITY();", conn);
+                      VALUES (@nom, @prenom, @classe, @date);
+                      SELECT SCOPE_IDENTITY();", conn);
 
-                cmd.Parameters.AddWithValue("@nom", Nom);
-                cmd.Parameters.AddWithValue("@prenom", Prenom);
-                cmd.Parameters.AddWithValue("@classe", NumeroClasse);
-                cmd.Parameters.AddWithValue("@date", (object?)DateDiplome ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@nom", etu.Nom);
+                cmd.Parameters.AddWithValue("@prenom", etu.Prenom);
+                cmd.Parameters.AddWithValue("@classe", etu.NumeroClasse);
+                cmd.Parameters.AddWithValue("@date", (object?)etu.DateDiplome ?? DBNull.Value);
 
-                Id = Convert.ToInt32(cmd.ExecuteScalar());
-                return Id > 0;
+                etu.Id = Convert.ToInt32(cmd.ExecuteScalar());
+                return etu.Id > 0;
             }
             else // UPDATE
             {
                 cmd = new SqlCommand(
                     @"UPDATE Etudiant SET nom=@nom, prenom=@prenom,
-                  numero_classe=@classe, date_diplome=@date
-                  WHERE id=@id", conn);
+                      numero_classe=@classe, date_diplome=@date
+                      WHERE id=@id", conn);
 
-                cmd.Parameters.AddWithValue("@id", Id);
-                cmd.Parameters.AddWithValue("@nom", Nom);
-                cmd.Parameters.AddWithValue("@prenom", Prenom);
-                cmd.Parameters.AddWithValue("@classe", NumeroClasse);
-                cmd.Parameters.AddWithValue("@date", (object?)DateDiplome ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@id", etu.Id);
+                cmd.Parameters.AddWithValue("@nom", etu.Nom);
+                cmd.Parameters.AddWithValue("@prenom", etu.Prenom);
+                cmd.Parameters.AddWithValue("@classe", etu.NumeroClasse);
+                cmd.Parameters.AddWithValue("@date", (object?)etu.DateDiplome ?? DBNull.Value);
 
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
 
         // -------------------------
-        //  DELETE
+        // DELETE
         // -------------------------
-        public bool Delete()
+        public bool Delete(int id)
         {
-            if (Id == 0) return false;
+            if (id == 0) return false;
 
             using SqlConnection conn = new SqlConnection(connectionString);
             conn.Open();
 
             SqlCommand cmd = new SqlCommand("DELETE FROM Etudiant WHERE id=@id", conn);
-            cmd.Parameters.AddWithValue("@id", Id);
+            cmd.Parameters.AddWithValue("@id", id);
 
             return cmd.ExecuteNonQuery() > 0;
         }
 
         // -------------------------
-        //  GET BY ID
+        // GET BY ID
         // -------------------------
-        public static Etudiant? GetById(int id)
+        public Etudiant? GetById(int id)
         {
             using SqlConnection conn = new SqlConnection(connectionString);
             conn.Open();
@@ -99,23 +81,21 @@ namespace ADONET
             cmd.Parameters.AddWithValue("@id", id);
 
             SqlDataReader reader = cmd.ExecuteReader();
-
             if (!reader.Read()) return null;
 
-            return new Etudiant
-            {
-                Id = reader.GetInt32(0),
-                Nom = reader.GetString(1),
-                Prenom = reader.GetString(2),
-                NumeroClasse = reader.GetInt32(3),
-                DateDiplome = reader.IsDBNull(4) ? null : reader.GetDateTime(4)
-            };
+            return new Etudiant(
+                reader.GetInt32(0),
+                reader.GetString(1),
+                reader.GetString(2),
+                reader.GetInt32(3),
+                reader.IsDBNull(4) ? null : reader.GetDateTime(4)
+            );
         }
 
         // -------------------------
-        //  GET LIST + FILTER
+        // GET LIST + FILTER
         // -------------------------
-        public static List<Etudiant> GetEtudiants(int? numeroClasse = null)
+        public List<Etudiant> GetEtudiants(int? numeroClasse = null)
         {
             List<Etudiant> resultat = new();
 
@@ -131,34 +111,32 @@ namespace ADONET
                 cmd.Parameters.AddWithValue("@classe", numeroClasse);
 
             SqlDataReader reader = cmd.ExecuteReader();
-
             while (reader.Read())
             {
-                resultat.Add(new Etudiant
-                {
-                    Id = reader.GetInt32(0),
-                    Nom = reader.GetString(1),
-                    Prenom = reader.GetString(2),
-                    NumeroClasse = reader.GetInt32(3),
-                    DateDiplome = reader.IsDBNull(4) ? null : reader.GetDateTime(4)
-                });
+                resultat.Add(new Etudiant(
+                    reader.GetInt32(0),
+                    reader.GetString(1),
+                    reader.GetString(2),
+                    reader.GetInt32(3),
+                    reader.IsDBNull(4) ? null : reader.GetDateTime(4)
+                ));
             }
 
             return resultat;
         }
 
         // -------------------------
-        //  EDIT depuis un objet
+        // EDIT depuis un objet
         // -------------------------
-        public static bool EditEtudiant(int id, Etudiant data)
+        public bool EditEtudiant(int id, Etudiant data)
         {
             using SqlConnection conn = new SqlConnection(connectionString);
             conn.Open();
 
             SqlCommand cmd = new SqlCommand(
                 @"UPDATE Etudiant SET nom=@nom, prenom=@prenom,
-              numero_classe=@classe, date_diplome=@date
-              WHERE id=@id", conn);
+                  numero_classe=@classe, date_diplome=@date
+                  WHERE id=@id", conn);
 
             cmd.Parameters.AddWithValue("@id", id);
             cmd.Parameters.AddWithValue("@nom", data.Nom);
@@ -168,11 +146,5 @@ namespace ADONET
 
             return cmd.ExecuteNonQuery() > 0;
         }
-
-        public override string ToString()
-        {
-            return $"ID: {Id}, Nom: {Nom}, Prénom: {Prenom}, Classe: {NumeroClasse}, Diplôme: {(DateDiplome?.ToString("yyyy-MM-dd") ?? "N/A")}";
-        }
-
     }
 }

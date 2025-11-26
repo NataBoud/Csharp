@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+using ADONET.Models;
+using ADONET.Repositories;
 
 namespace ADONET
 {
     internal class IHM
     {
+        private readonly EtudiantRepository repo = new EtudiantRepository();
+
         public void Demarrer()
         {
             while (true)
@@ -28,6 +29,7 @@ namespace ADONET
                     case "4": Supprimer(); break;
                     case "5": Modifier(); break;
                     case "0": return;
+                    default: Console.WriteLine("Choix invalide."); break;
                 }
             }
         }
@@ -36,7 +38,7 @@ namespace ADONET
         {
             Console.Write("Nom : ");
             string nom = Console.ReadLine()!;
-            Console.Write("Prenom : ");
+            Console.Write("Prénom : ");
             string prenom = Console.ReadLine()!;
             Console.Write("Classe : ");
             int classe = int.Parse(Console.ReadLine()!);
@@ -50,13 +52,22 @@ namespace ADONET
                 string.IsNullOrEmpty(date) ? null : DateTime.Parse(date)
             );
 
-            e.Save();
-            Console.WriteLine("✔ Étudiant ajouté !");
+            if (repo.Save(e))
+                Console.WriteLine("Étudiant ajouté !");
+            else
+                Console.WriteLine("Erreur lors de l'ajout.");
         }
 
         private void AfficherTous()
         {
-            foreach (var e in Etudiant.GetEtudiants())
+            var etudiants = repo.GetEtudiants();
+            if (etudiants.Count == 0)
+            {
+                Console.WriteLine("Aucun étudiant trouvé.");
+                return;
+            }
+
+            foreach (var e in etudiants)
                 Console.WriteLine(e);
         }
 
@@ -65,7 +76,14 @@ namespace ADONET
             Console.Write("Numéro de classe : ");
             int classe = int.Parse(Console.ReadLine()!);
 
-            foreach (var e in Etudiant.GetEtudiants(classe))
+            var etudiants = repo.GetEtudiants(classe);
+            if (etudiants.Count == 0)
+            {
+                Console.WriteLine("Aucun étudiant trouvé pour cette classe.");
+                return;
+            }
+
+            foreach (var e in etudiants)
                 Console.WriteLine(e);
         }
 
@@ -74,23 +92,18 @@ namespace ADONET
             Console.Write("ID à supprimer : ");
             int id = int.Parse(Console.ReadLine()!);
 
-            var etu = Etudiant.GetById(id);
-            if (etu == null)
-            {
-                Console.WriteLine("Non trouvé");
-                return;
-            }
-
-            etu.Delete();
-            Console.WriteLine("✔ Supprimé !");
+            if (repo.Delete(id))
+                Console.WriteLine("Supprimé !");
+            else
+                Console.WriteLine("Étudiant non trouvé ou erreur lors de la suppression.");
         }
 
         private void Modifier()
         {
             Console.Write("ID à modifier : ");
             int id = int.Parse(Console.ReadLine()!);
-            var e = Etudiant.GetById(id);
 
+            var e = repo.GetById(id);
             if (e == null)
             {
                 Console.WriteLine("Non trouvé");
@@ -106,8 +119,14 @@ namespace ADONET
             Console.Write("Nouvelle classe : ");
             e.NumeroClasse = int.Parse(Console.ReadLine()!);
 
-            e.Save();
-            Console.WriteLine("✔ Modifié !");
+            Console.Write("Nouvelle date Diplôme (yyyy-mm-dd) ou vide : ");
+            string? date = Console.ReadLine();
+            e.DateDiplome = string.IsNullOrEmpty(date) ? null : DateTime.Parse(date);
+
+            if (repo.Save(e))
+                Console.WriteLine("Modifié !");
+            else
+                Console.WriteLine("Erreur lors de la modification.");
         }
     }
 }
