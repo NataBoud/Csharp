@@ -129,7 +129,7 @@ namespace ExPile
                 switch (choix)
                 {
                     case "1":
-                        pilePersonne.Empiler(Personne.SaisiePersonne());
+                        pilePersonne.Empiler(Personne.SaisiePersonne()); 
                         break;
 
                     case "2":
