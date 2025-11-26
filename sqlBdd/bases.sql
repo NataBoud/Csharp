@@ -110,7 +110,8 @@ LEFT JOIN Dogs d ON d.owner_id = p.id;
 -- Affichez tous les chiens avec le nom de leur maître, en remplaçant les valeurs NULL par 'No Owner'.
 SELECT
 	d.name as DogName,
-	ISNULL(p.first_name + ' ' + p.last_name, 'No Owner') AS Owner
+	COALESCE(p.first_name, 'No owner') AS first_name,
+	COALESCE(p.last_name, 'No owner') AS last_name
 FROM Dogs d
 LEFT JOIN People p ON d.owner_id = p.id;
 
@@ -126,7 +127,7 @@ FULL OUTER JOIN People p ON d.owner_id = p.id;
 -- Affichez les chiens dont le poids est supérieur à 10 kg et inférieur à 30 kg.
 SELECT *
 FROM Dogs
-WHERE weight > 10.0 AND weight > 30.0;
+WHERE weight BETWEEN 10 AND 30;
 
 -- Affichez les chiens appartenant aux maîtres vivant à l'adresse '123 Main St'.
 SELECT d.name AS DogName, d.breed, d.weight,
@@ -137,32 +138,41 @@ INNER JOIN People p
 WHERE p.address = '123 Main St';
 
 -- Agrégation - Nombre de chiens par maître
-SELECT p.id, p.first_name, p.last_name,
-	   COUNT(d.id) AS number_of_dogs
-FROM People p
-LEFT JOIN Dogs d ON d.owner_id = p.id
-GROUP BY p.id, p.first_name, p.last_name;
+SELECT 
+	CONCAT_WS(' ', p.first_name, p.last_name) AS Maitre,
+	COUNT(d.id) AS number_of_dogs
+FROM 
+	People p
+LEFT JOIN 
+	Dogs d ON d.owner_id = p.id
+GROUP BY 
+	p.id, p.first_name, p.last_name
+ORDER BY
+	number_of_dogs DESC;
 
 -- Agrégation - Poids total des chiens par maître
 SELECT 
-    p.id,
-    p.first_name,
-    p.last_name,
+    CONCAT_WS(' ', p.first_name, p.last_name) AS Maitre,
     SUM(d.weight) AS poids_total_chiens
-FROM People p
-LEFT JOIN Dogs d
-    ON p.id = d.owner_id
+FROM
+	Dogs d
+INNER JOIN
+	People p ON p.id = d.owner_id
 GROUP BY 
-    p.id, p.first_name, p.last_name;
+    p.first_name, p.last_name
+ORDER BY
+	poids_total_chiens DESC;
 
 -- Sous-requête - Récupérer les maîtres qui possèdent le chien le plus lourd
-SELECT *
-FROM People
-WHERE id IN (
-	SELECT owner_id
-	FROM Dogs
-	WHERE weight = (SELECT MAX(weight) FROM Dogs)
-);
+SELECT
+	p.first_name,
+	p.last_name
+FROM
+	People p
+INNER JOIN
+	Dogs d ON d.owner_id = p.id
+WHERE
+	d.[weight] = (SELECT MAX([weight]) FROM Dogs);
 
 -- Afficher les chiens qui ont un maître dont l’âge est supérieur à 40 ans
 SELECT 
@@ -171,6 +181,7 @@ FROM Dogs d
 JOIN People p ON d.owner_id = p.id
 WHERE p.age > 40;
 
+-- Listez les maitres n'ayant pas de chien.
 SELECT p.first_name, p.last_name
 FROM People p
 LEFT JOIN Dogs d ON p.id = d.owner_id
@@ -190,21 +201,32 @@ GROUP BY p.id, p.first_name, p.last_name
 HAVING COUNT(d.id) >= 2;
 
 -- Liste combinée de chiens sans maîtres et de maîtres sans chiens
-SELECT 
-    p.first_name AS owner_first_name,
-    p.last_name AS owner_last_name,
-    d.name AS dog_name,
-    d.breed AS dog_breed
-FROM People p
-FULL OUTER JOIN Dogs d
-    ON p.id = d.owner_id
-ORDER BY owner_last_name, dog_name;
+-- SELECT 
+   -- p.first_name AS owner_first_name,
+    --p.last_name AS owner_last_name,
+    -- d.name AS dog_name,
+   --  d.breed AS dog_breed
+-- FROM People p
+-- FULL OUTER JOIN Dogs d
+    -- ON p.id = d.owner_id
+-- ORDER BY owner_last_name, dog_name;
+
+SELECT
+	d.name,
+	p.first_name,
+	p.last_name
+FROM
+	Dogs d
+FULL OUTER JOIN
+	People p ON p.id = d.owner_id
+WHERE
+	d.owner_id IS NULL OR p.id IS NULL;
 
 -- Maître et chiens associés avec somme de leurs tailles
 SELECT 
     p.first_name,
     p.last_name,
-    SUM(ISNULL(d.size, 0)) AS total_dog_size --ISNULL(d.size, 0) sert à gérer le cas où un maître n’a pas de chien.
+    SUM(COALESCE(d.size, 0)) AS total_dog_size --ISNULL(d.size, 0) sert à gérer le cas où un maître n’a pas de chien.
 FROM People p
 LEFT JOIN Dogs d
     ON p.id = d.owner_id
