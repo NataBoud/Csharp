@@ -11,29 +11,23 @@ namespace ExoCommande
         private readonly ClientDao clientDao = new ClientDao();
         private readonly CommandeDao commandeDao = new CommandeDao();
 
-        private void AfficherMenu()
-        {
-            Console.WriteLine("\n=== MENU ===");
-            Console.WriteLine("1 - Afficher tous les clients");
-            Console.WriteLine("2 - Créer un client");
-            Console.WriteLine("3 - Modifier un client");
-            Console.WriteLine("4 - Supprimer un client");
-            Console.WriteLine("5 - Afficher le détail d'un client");
-            Console.WriteLine("6 - Ajouter une commande");
-            Console.WriteLine("7 - Modifier une commande");
-            Console.WriteLine("8 - Supprimer une commande");
-            Console.WriteLine("0 - Quitter");
-            Console.Write("Choix : ");
-        }
-
         public void Start()
         {
-            string choix;
-            do
+            while (true)
             {
-                AfficherMenu();
-                choix = Console.ReadLine()!;
-                switch (choix)
+                Console.WriteLine("\n=== MENU ===");
+                Console.WriteLine("1 - Afficher tous les clients");
+                Console.WriteLine("2 - Créer un client");
+                Console.WriteLine("3 - Modifier un client");
+                Console.WriteLine("4 - Supprimer un client");
+                Console.WriteLine("5 - Afficher le détail d'un client");
+                Console.WriteLine("6 - Ajouter une commande");
+                Console.WriteLine("7 - Modifier une commande");
+                Console.WriteLine("8 - Supprimer une commande");
+                Console.WriteLine("0 - Quitter");
+                Console.Write("Choix : ");
+
+                switch (Console.ReadLine())
                 {
                     case "1": AfficherClients();break;
                     case "2":CreerClient();break;
@@ -46,8 +40,7 @@ namespace ExoCommande
                     case "0": return;
                     default:Console.WriteLine("Erreur de saisie !");break;
                 }
-
-            } while (choix != "0");
+            }
         }
 
         private void ModifierCommande()
@@ -55,7 +48,7 @@ namespace ExoCommande
             Console.Write("Saisir l'ID de la commande à modifier : ");
             int id;
             while (!int.TryParse(Console.ReadLine()!, out id))
-                Console.Write("Erreur de saisie, réessayez : ");
+            Console.Write("Erreur de saisie, réessayez : ");
 
             var commande = commandeDao.getOneById(id);
             if (commande == null)
@@ -63,7 +56,6 @@ namespace ExoCommande
                 Console.WriteLine("Commande introuvable !");
                 return;
             }
-
             Console.WriteLine(commande);
 
             Console.Write("Nouveau total (laissez vide pour ne pas modifier) : ");
@@ -73,7 +65,7 @@ namespace ExoCommande
                 commande.Total = total;
             }
 
-            // si tu veux modifier la date commande
+            // modifier la date commande
             Console.Write("Nouvelle date (jj/mm/aaaa, laissez vide pour ne pas modifier) : ");
             input = Console.ReadLine()!;
             if (DateTime.TryParse(input, out DateTime dateCommande))
