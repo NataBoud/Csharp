@@ -12,7 +12,8 @@ namespace ADONET.Models
         public int NumeroClasse { get; set; }
         public DateTime? DateDiplome { get; set; }
 
-        // Constructeur vide (obligatoire pour l'hydratation depuis la BDD)
+        // Constructeur vide
+        // (obligatoire pour l'hydratation - (remplir un objet avec des valeurs venant de la BDD) - depuis la BDD)
         public Etudiant() { }
 
         // Constructeur sans ID (pour un nouvel étudiant)

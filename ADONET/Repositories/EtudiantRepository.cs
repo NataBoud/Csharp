@@ -15,7 +15,7 @@ namespace ADONET.Repositories
         // -------------------------
         public bool Save(Etudiant etu)
         {
-            using SqlConnection conn = new SqlConnection(connectionString);
+            using SqlConnection conn = new(connectionString);
             conn.Open();
 
             SqlCommand cmd;
@@ -59,10 +59,10 @@ namespace ADONET.Repositories
         {
             if (id == 0) return false;
 
-            using SqlConnection conn = new SqlConnection(connectionString);
+            using SqlConnection conn = new(connectionString);
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("DELETE FROM Etudiant WHERE id=@id", conn);
+            SqlCommand cmd = new("DELETE FROM Etudiant WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@id", id);
 
             return cmd.ExecuteNonQuery() > 0;
@@ -73,10 +73,10 @@ namespace ADONET.Repositories
         // -------------------------
         public Etudiant? GetById(int id)
         {
-            using SqlConnection conn = new SqlConnection(connectionString);
+            using SqlConnection conn = new(connectionString);
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand(
+            SqlCommand cmd = new(
                 "SELECT id, nom, prenom, numero_classe, date_diplome FROM Etudiant WHERE id=@id", conn);
             cmd.Parameters.AddWithValue("@id", id);
 
@@ -97,16 +97,16 @@ namespace ADONET.Repositories
         // -------------------------
         public List<Etudiant> GetEtudiants(int? numeroClasse = null)
         {
-            List<Etudiant> resultat = new();
+            List<Etudiant> resultat = [];
 
-            using SqlConnection conn = new SqlConnection(connectionString);
+            using SqlConnection conn = new(connectionString);
             conn.Open();
 
             string query = "SELECT id, nom, prenom, numero_classe, date_diplome FROM Etudiant";
             if (numeroClasse != null)
                 query += " WHERE numero_classe=@classe";
 
-            SqlCommand cmd = new SqlCommand(query, conn);
+            SqlCommand cmd = new(query, conn);
             if (numeroClasse != null)
                 cmd.Parameters.AddWithValue("@classe", numeroClasse);
 
@@ -130,10 +130,10 @@ namespace ADONET.Repositories
         // -------------------------
         public bool EditEtudiant(int id, Etudiant data)
         {
-            using SqlConnection conn = new SqlConnection(connectionString);
+            using SqlConnection conn = new(connectionString);
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand(
+            SqlCommand cmd = new(
                 @"UPDATE Etudiant SET nom=@nom, prenom=@prenom,
                   numero_classe=@classe, date_diplome=@date
                   WHERE id=@id", conn);
@@ -144,7 +144,7 @@ namespace ADONET.Repositories
             cmd.Parameters.AddWithValue("@classe", data.NumeroClasse);
             cmd.Parameters.AddWithValue("@date", (object?)data.DateDiplome ?? DBNull.Value);
 
-            return cmd.ExecuteNonQuery() > 0;
+            return cmd.ExecuteNonQuery() == 1;
         }
     }
 }
