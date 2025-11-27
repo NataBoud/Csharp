@@ -20,4 +20,4 @@ CREATE TABLE commande (
     updated_at DATETIME2 NULL
 );
 
-SELECT * FROM commande;
+SELECT * FROM client;

@@ -50,7 +50,7 @@ namespace ExoCommande.Dao
         // GET BY ID
         public override Commande? getOneById(int id)
         {
-            request = @"SELECT id, client_id, date_commande, total, createdAt, updatedAt
+            request = @"SELECT id, client_id, date_commande, total, created_at, updated_at
                         FROM Commande
                         WHERE id = @id";
 
@@ -120,7 +120,7 @@ namespace ExoCommande.Dao
                         SET client_id=@client_id,
                             date_commande=@date_commande,
                             total=@total,
-                            updatedAt=SYSDATETIME()
+                            updated_at=SYSDATETIME()
                         WHERE id=@id";
 
             try

@@ -10,7 +10,7 @@ namespace ExoCommande.Dao
         // GET ALL
         public override List<Client> GetAll()
         {
-            List<Client> clients = new List<Client>();
+            List<Client> clients = [];
 
             request = @"SELECT id, nom, prenom, adresse, codePostal, ville, telephone, created_at, updated_at
                         FROM Client";
@@ -132,7 +132,7 @@ namespace ExoCommande.Dao
             try
             {
                 using SqlConnection connection = DataConnection.GetConnection;
-                using SqlCommand command = new SqlCommand(request, connection);
+                using SqlCommand command = new(request, connection);
 
                 command.Parameters.AddWithValue("@nom", entity.Nom);
                 command.Parameters.AddWithValue("@prenom", entity.Prenom);

@@ -8,8 +8,8 @@ namespace ExoCommande
 {
     internal class IHM
     {
-        private readonly ClientDao clientDao = new ClientDao();
-        private readonly CommandeDao commandeDao = new CommandeDao();
+        private readonly ClientDao clientDao = new();
+        private readonly CommandeDao commandeDao = new();
 
         public void Start()
         {
@@ -43,12 +43,13 @@ namespace ExoCommande
             }
         }
 
+
         private void ModifierCommande()
         {
             Console.Write("Saisir l'ID de la commande à modifier : ");
             int id;
             while (!int.TryParse(Console.ReadLine()!, out id))
-            Console.Write("Erreur de saisie, réessayez : ");
+                Console.Write("Erreur de saisie, réessayez : ");
 
             var commande = commandeDao.getOneById(id);
             if (commande == null)
@@ -56,32 +57,63 @@ namespace ExoCommande
                 Console.WriteLine("Commande introuvable !");
                 return;
             }
+
             Console.WriteLine(commande);
 
+            // === MODIFICATION TOTAL ===
             Console.Write("Nouveau total (laissez vide pour ne pas modifier) : ");
-            string input = Console.ReadLine()!;
-            if (decimal.TryParse(input, out decimal total))
+            string inputTotal = Console.ReadLine()!;
+
+            if (!string.IsNullOrWhiteSpace(inputTotal))
             {
-                commande.Total = total;
+                decimal newTotal;
+
+                while (!decimal.TryParse(inputTotal, out newTotal))
+                {
+                    Console.Write("Total invalide ! Saisir un nombre (ou vide pour annuler) : ");
+                    inputTotal = Console.ReadLine()!;
+
+                    if (string.IsNullOrWhiteSpace(inputTotal))
+                    {
+                        Console.WriteLine("Modification du total annulée.");
+                        break;
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(inputTotal))
+                    commande.Total = newTotal;
             }
 
-            // modifier la date commande
+
+            // === MODIFICATION DATE ===
             Console.Write("Nouvelle date (jj/mm/aaaa, laissez vide pour ne pas modifier) : ");
-            input = Console.ReadLine()!;
-            if (DateTime.TryParse(input, out DateTime dateCommande))
+            string inputDate = Console.ReadLine()!;
+
+            if (!string.IsNullOrWhiteSpace(inputDate))
             {
-                commande.DateCommande = dateCommande;
+                DateTime newDate;
+
+                while (!DateTime.TryParse(inputDate, out newDate))
+                {
+                    Console.Write("Date invalide ! Réessayer (jj/mm/aaaa) ou vide pour annuler : ");
+                    inputDate = Console.ReadLine()!;
+
+                    if (string.IsNullOrWhiteSpace(inputDate))
+                    {
+                        Console.WriteLine("Modification de la date annulée.");
+                        break;
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(inputDate))
+                    commande.DateCommande = newDate;
             }
 
-            if (commandeDao.Update(commande) != null)
-            {
-                Console.WriteLine("Commande modifiée avec succès !");
-            }
-            else
-            {
-                Console.WriteLine("Erreur lors de la modification.");
-            }
+            // === ENREGISTREMENT SQL ===
+            commandeDao.Update(commande);
+            Console.WriteLine("Modifications sauvegardées !");
         }
+
 
         private void SupprimerCommande()
         {
@@ -99,7 +131,6 @@ namespace ExoCommande
                 Console.WriteLine("Erreur lors de la suppression ou commande introuvable.");
             }
         }
-
 
         private void AfficherClients()
         {
@@ -166,10 +197,9 @@ namespace ExoCommande
             if (client == null) { Console.WriteLine("Client introuvable !"); return; }
 
             Console.WriteLine(client);
-
-            var commandes = commandeDao.GetCommandesByClientId(id); 
             Console.WriteLine("Commandes :");
-            commandes.ForEach(Console.WriteLine);
+            commandeDao.GetCommandesByClientId(id).ForEach(Console.WriteLine);
+            
         }
 
         private void AjouterCommande()
@@ -183,10 +213,7 @@ namespace ExoCommande
             Console.Write("Montant total : ");
             if (!decimal.TryParse(Console.ReadLine(), out decimal total)) return;
 
-            Commande commande = commandeDao.AddCommandeToClient(client, total);
-            
+            commandeDao.AddCommandeToClient(client, total); 
         }
-
-
     }
 }
