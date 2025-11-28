@@ -10,11 +10,6 @@ namespace ExoLibrary.Dao
     {
         private string request = "";
 
-        public bool Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Book> GetAll()
         {
             List<Book> books = [];
@@ -147,6 +142,31 @@ namespace ExoLibrary.Dao
             }
 
             return entity;
+        }
+
+        public bool Delete(int id)
+        {
+            Book? book = GetOneById(id);
+            if (book == null)
+                return false;
+
+            request = "DELETE FROM Book WHERE Id = @Id";
+
+            try
+            {
+                using SqlConnection connection = DataConnection.GetConnection;
+                using SqlCommand command = new SqlCommand(request, connection);
+                command.Parameters.AddWithValue("@Id", book.Id);
+
+                connection.Open();
+                int rowsAffected = command.ExecuteNonQuery();
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur dans Delete : " + ex.Message);
+                return false;
+            }
         }
     }
 }
