@@ -46,3 +46,30 @@ IF OBJECT_ID('Book', 'U') IS NOT NULL
 -- Supprimer la table Member
 IF OBJECT_ID('Member', 'U') IS NOT NULL
     DROP TABLE Member;
+
+SELECT * FROM Book;
+SELECT * FROM Member;
+SELECT * FROM Borrow;
+
+INSERT INTO Book (Title, Author, ISBN, PublicationYear)
+VALUES 
+('Le Petit Prince', 'Antoine de Saint-Exupéry', '978-0156012195', 1943),
+('1984', 'George Orwell', '978-0451524935', 1949),
+('Harry Potter à l''école des sorciers', 'J.K. Rowling', '978-0747532699', 1997),
+('Les Misérables', 'Victor Hugo', '978-2070409187', 1862),
+('Le Seigneur des Anneaux', 'J.R.R. Tolkien', '978-0261102385', 1954);
+
+INSERT INTO Member (LastName, FirstName, Email, RegistrationDate)
+VALUES
+('Dupont', 'Jean', 'jean.dupont@email.com', '2023-01-10'),
+('Martin', 'Sophie', 'sophie.martin@email.com', '2023-02-15'),
+('Durand', 'Paul', 'paul.durand@email.com', '2023-03-05'),
+('Lefevre', 'Claire', 'claire.lefevre@email.com', '2023-04-12'),
+('Moreau', 'Lucas', 'lucas.moreau@email.com', '2023-05-20');
+
+INSERT INTO Borrow (BookId, MemberId, BorrowDate, ReturnDate)
+VALUES
+(1, 1, '2025-11-01', NULL),   
+(3, 2, '2025-11-05', '2025-11-20'), 
+(2, 3, '2025-11-10', NULL),   
+(5, 4, '2025-11-12', NULL);

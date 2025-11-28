@@ -22,9 +22,10 @@ namespace ExoLibrary.Services
             string title = InputHelper.AskString("Titre : ");
             string author = InputHelper.AskString("Auteur : ");
             string isbn = InputHelper.AskString("ISBN : ");
-            int year = InputHelper.AskInt("Année de publication : ");
+            // Demande la date complète au format jj/MM/yyyy
+            DateTime publicationDate = InputHelper.AskDate("Année de publication (jj/MM/yyyy) : ");
 
-            Book book = new Book(title, author, isbn, year);
+            Book book = new Book(title, author, isbn, publicationDate.Year); 
             bookDao.Save(book);
 
             Console.WriteLine($"Livre '{book.Title}' créé avec l'id {book.Id} !");

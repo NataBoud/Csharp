@@ -36,6 +36,18 @@ namespace ExoLibrary.Helpers
             }
             return input;
         }
+        public static DateTime AskDate(string message)
+        {
+            DateTime value;
+            Console.Write(message);
+            while (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy",
+                                           System.Globalization.CultureInfo.InvariantCulture,
+                                           System.Globalization.DateTimeStyles.None, out value))
+            {
+                Console.Write("Date invalide ! Réessayez (jj/MM/yyyy) : ");
+            }
+            return value;
+        }
 
         public static string? AskOptionalString(string message, string? defaultValue = null)
         {
