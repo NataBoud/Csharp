@@ -36,12 +36,56 @@ namespace ExoCommande.Helpers
             return input;
         }
 
-        public static string? AskOptionalString(string message)
+        public static string? AskOptionalString(string message, string? defaultValue = null)
         {
             Console.Write(message);
             string input = Console.ReadLine()!;
-            return string.IsNullOrWhiteSpace(input) ? null : input;
+            return string.IsNullOrWhiteSpace(input) ? defaultValue : input;
         }
+
+        public static decimal? AskDecimalOrEmpty(string message)
+        {
+            Console.Write(message);
+            string input = Console.ReadLine()!;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            decimal value;
+            while (!decimal.TryParse(input, out value))
+            {
+                Console.Write("Valeur invalide ! Saisir un nombre (ou vide pour annuler) : ");
+                input = Console.ReadLine()!;
+
+                if (string.IsNullOrWhiteSpace(input))
+                    return null;
+            }
+
+            return value;
+        }
+
+        public static DateTime? AskDateOrEmpty(string message)
+        {
+            Console.Write(message);
+            string input = Console.ReadLine()!;
+
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            DateTime value;
+            while (!DateTime.TryParse(input, out value))
+            {
+                Console.Write("Date invalide ! Réessayer (jj/mm/aaaa) ou vide pour annuler : ");
+                input = Console.ReadLine()!;
+
+                if (string.IsNullOrWhiteSpace(input))
+                    return null;
+            }
+
+            return value;
+        }
+
+
     }
 
 }

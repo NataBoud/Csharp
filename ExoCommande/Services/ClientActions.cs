@@ -18,7 +18,7 @@ namespace ExoCommande.Services
             commandeDao = coDao;
         }
 
-        public void AfficherClients() => clientDao?.GetAll().ForEach(Console.WriteLine);
+        public void AfficherClients() => clientDao.GetAll().ForEach(Console.WriteLine);
 
         public void CreerClient()
         {
@@ -27,34 +27,34 @@ namespace ExoCommande.Services
             string adresse = InputHelper.AskString("Adresse : ");
             string codePostal = InputHelper.AskString("Code Postal : ");
             string ville = InputHelper.AskString("Ville : ");
-            string? tel = InputHelper.AskOptionalString("Téléphone : ");
+            string? tel = InputHelper.AskOptionalString("Téléphone : ", "");
 
-            Client client = new Client(nom, prenom, adresse, codePostal, ville, tel);
+            Client client = new(nom, prenom, adresse, codePostal, ville, tel);
             clientDao.Save(client);
             Console.WriteLine($"Client {client.Nom} créé avec l'id {client.Id} !");
         }
 
         public void ModifierClient()
         {
-            Console.Write("Id du client à modifier : ");
-            if (!int.TryParse(Console.ReadLine(), out int id)) return;
+            int id = InputHelper.AskInt("Id du client à modifier : ");
 
             Client? client = clientDao.getOneById(id);
             if (client == null) { Console.WriteLine("Client introuvable !"); return; }
 
-            Console.Write($"Nom ({client.Nom}) : "); string nom = Console.ReadLine()!;
-            Console.Write($"Prénom ({client.Prenom}) : "); string prenom = Console.ReadLine()!;
-            Console.Write($"Adresse ({client.Adresse}) : "); string adresse = Console.ReadLine()!;
-            Console.Write($"Code Postal ({client.CodePostal}) : "); string codePostal = Console.ReadLine()!;
-            Console.Write($"Ville ({client.Ville}) : "); string ville = Console.ReadLine()!;
-            Console.Write($"Téléphone ({client.Telephone}) : "); string? tel = Console.ReadLine();
+            string nom = InputHelper.AskOptionalString($"Nom ({client.Nom}) : ", client.Nom)!;
+            string prenom = InputHelper.AskOptionalString($"Prénom ({client.Prenom}) : ", client.Prenom)!;
+            string adresse = InputHelper.AskOptionalString($"Adresse ({client.Adresse}) : ", client.Adresse)!;
+            string codePostal = InputHelper.AskOptionalString($"Code Postal ({client.CodePostal}) : ", client.CodePostal)!;
+            string ville = InputHelper.AskOptionalString($"Ville ({client.Ville}) : ", client.Ville)!;
 
-            client.Nom = string.IsNullOrEmpty(nom) ? client.Nom : nom;
-            client.Prenom = string.IsNullOrEmpty(prenom) ? client.Prenom : prenom;
-            client.Adresse = string.IsNullOrEmpty(adresse) ? client.Adresse : adresse;
-            client.CodePostal = string.IsNullOrEmpty(codePostal) ? client.CodePostal : codePostal;
-            client.Ville = string.IsNullOrEmpty(ville) ? client.Ville : ville;
-            client.Telephone = string.IsNullOrEmpty(tel) ? client.Telephone : tel;
+            string? tel = InputHelper.AskOptionalString($"Téléphone ({client.Telephone}) : ", client.Telephone);
+
+            client.Nom = nom;
+            client.Prenom = prenom;
+            client.Adresse = adresse;
+            client.CodePostal = codePostal;
+            client.Ville = ville;
+            client.Telephone = tel;
 
             clientDao.Update(client);
             Console.WriteLine("Client modifié !");
@@ -62,29 +62,29 @@ namespace ExoCommande.Services
 
         public void SupprimerClient()
         {
-            Console.Write("Id du client à supprimer : ");
-            if (!int.TryParse(Console.ReadLine(), out int id)) return;
+            int id = InputHelper.AskInt("Id du client à supprimer : ");
 
             if (clientDao.Delete(id))
                 Console.WriteLine("Client supprimé !");
             else
-                Console.WriteLine("Erreur lors de la suppression !");
+                Console.WriteLine("Erreur lors de la suppression ou client introuvable !");
         }
 
         public void AfficherDetailClient()
         {
-            Console.Write("Id du client : ");
-            if (!int.TryParse(Console.ReadLine(), out int id)) return;
+            int id = InputHelper.AskInt("Id du client : ");
 
-            Client? client = clientDao?.getOneById(id);
-            if (client == null) { Console.WriteLine("Client introuvable !"); return; }
+            Client? client = clientDao.getOneById(id);
+            if (client == null)
+            {
+                Console.WriteLine("Client introuvable !");
+                return;
+            }
 
             Console.WriteLine(client);
             Console.WriteLine("Commandes :");
-            commandeDao?.GetCommandesByClientId(id).ForEach(Console.WriteLine);
-
+            commandeDao.GetCommandesByClientId(id).ForEach(Console.WriteLine);
         }
-
 
     }
 }
