@@ -10,7 +10,7 @@ namespace ExoCommande.Dao
         public abstract T Save(T entity);
         public abstract T Update(T entity);
         public abstract List<T> GetAll();
-        public abstract T? getOneById(int id);
+        public abstract T? GetOneById(int id);
         public abstract bool Delete(int id);
     }
 }

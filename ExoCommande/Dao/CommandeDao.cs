@@ -28,7 +28,7 @@ namespace ExoCommande.Dao
 
                 while (reader.Read())
                 {
-                    Client client = clientDao.getOneById(reader.GetInt32(1))!;
+                    Client client = clientDao.GetOneById(reader.GetInt32(1))!;
                     commandes.Add(new Commande(
                         reader.GetInt32(0),
                         client,
@@ -48,7 +48,7 @@ namespace ExoCommande.Dao
         }
 
         // GET BY ID
-        public override Commande? getOneById(int id)
+        public override Commande? GetOneById(int id)
         {
             request = @"SELECT id, client_id, date_commande, total, created_at, updated_at
                         FROM Commande
@@ -67,7 +67,7 @@ namespace ExoCommande.Dao
 
                 if (reader.Read())
                 {
-                    Client client = clientDao.getOneById(reader.GetInt32(1))!;
+                    Client client = clientDao.GetOneById(reader.GetInt32(1))!;
                     return new Commande(
                         reader.GetInt32(0),
                         client,
@@ -167,6 +167,19 @@ namespace ExoCommande.Dao
             }
         }
 
+        public void DeleteAllCommandsOfAClient(Client client)
+        {
+            request = "DELETE FROM Commande WHERE client_id=@client_id";
+
+            using SqlConnection connection = DataConnection.GetConnection;
+            using SqlCommand command = new SqlCommand(request, connection);
+
+            command.Parameters.AddWithValue("@client_id", client.Id);
+
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+
         public Commande AddCommandeToClient(Client client, decimal total)
         {
             Commande commande = new Commande(client, total);
@@ -190,7 +203,7 @@ namespace ExoCommande.Dao
                 using SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    Client? client = clientDao.getOneById(reader.GetInt32(1));
+                    Client? client = clientDao.GetOneById(reader.GetInt32(1));
                     if (client == null) continue; // sécurité
 
                     commandes.Add(new Commande(

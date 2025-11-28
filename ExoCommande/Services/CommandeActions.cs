@@ -22,7 +22,7 @@ namespace ExoCommande.Services
         public void AjouterCommande()
         {
             int id = InputHelper.AskInt("Id du client : ");
-            Client? client = clientDao.getOneById(id);
+            Client? client = clientDao.GetOneById(id);
             if (client == null)
             {
                 Console.WriteLine("Client introuvable !");
@@ -38,7 +38,7 @@ namespace ExoCommande.Services
         public void ModifierCommande()
         {
             int id = InputHelper.AskInt("Saisir l'ID de la commande à modifier : ");
-            var commande = commandeDao.getOneById(id);
+            var commande = commandeDao.GetOneById(id);
 
             if (commande == null)
             {

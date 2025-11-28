@@ -47,7 +47,7 @@ namespace ExoCommande.Dao
         }
 
         // GET BY ID
-        public override Client? getOneById(int id)
+        public override Client? GetOneById(int id)
         {
             request = @"SELECT id, nom, prenom, adresse, codePostal, ville, telephone, created_at, updated_at
                         FROM Client
@@ -155,24 +155,36 @@ namespace ExoCommande.Dao
         }
 
         // DELETE
+
         public override bool Delete(int id)
         {
-            request = @"DELETE FROM Client WHERE id = @id";
-            try
-            {
-                using SqlConnection connection = DataConnection.GetConnection;
-                using SqlCommand command = new SqlCommand(request, connection);
-                command.Parameters.AddWithValue("@id", id);
-                connection.Open();
-                int rowsAffected = command.ExecuteNonQuery();
-                return rowsAffected > 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur dans Delete : " + ex.Message);
+            Client? client = GetOneById(id);
+
+            if (client == null)
                 return false;
-            }
+
+            return Delete(client);
         }
+        public bool Delete(Client client)
+        {
+            // 1) Suppression des commandes du client
+            CommandeDao commandeDao = new CommandeDao();
+            commandeDao.DeleteAllCommandsOfAClient(client);
+
+            // 2) Suppression du client
+            request = "DELETE FROM Client WHERE id=@id";
+
+            using SqlConnection connection = DataConnection.GetConnection;
+            using SqlCommand command = new SqlCommand(request, connection);
+
+            command.Parameters.AddWithValue("@id", client.Id);
+
+            connection.Open();
+            int rowsAffected = command.ExecuteNonQuery();
+
+            return rowsAffected > 0;
+        }
+
 
     }
 }

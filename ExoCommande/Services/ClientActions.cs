@@ -38,7 +38,7 @@ namespace ExoCommande.Services
         {
             int id = InputHelper.AskInt("Id du client à modifier : ");
 
-            Client? client = clientDao.getOneById(id);
+            Client? client = clientDao.GetOneById(id);
             if (client == null) { Console.WriteLine("Client introuvable !"); return; }
 
             string nom = InputHelper.AskOptionalString($"Nom ({client.Nom}) : ", client.Nom)!;
@@ -74,7 +74,7 @@ namespace ExoCommande.Services
         {
             int id = InputHelper.AskInt("Id du client : ");
 
-            Client? client = clientDao.getOneById(id);
+            Client? client = clientDao.GetOneById(id);
             if (client == null)
             {
                 Console.WriteLine("Client introuvable !");
