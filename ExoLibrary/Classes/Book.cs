@@ -41,8 +41,18 @@ namespace ExoLibrary.Classes
 
         public override string ToString()
         {
-            return $"{Title} par {Author}, ISBN : {ISBN}, Publié en {PublicationYear}, Disponible : {IsAvailable}, Créé le : {CreatedAt}, Modifié le : {UpdatedAt}";
-        }
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"        Titre       : {Title}");
+            sb.AppendLine($"        Auteur      : {Author}");
+            sb.AppendLine($"        ISBN        : {ISBN}");
+            sb.AppendLine($"        Publié en   : {PublicationYear}");
+            sb.AppendLine($"        Disponible  : {(IsAvailable ? "Oui" : "Non")}");
+            sb.AppendLine($"        Créé le     : {CreatedAt:dd/MM/yyyy HH:mm}");
 
+            if (UpdatedAt != null)
+                sb.AppendLine($"        Modifié le  : {UpdatedAt:dd/MM/yyyy HH:mm}");
+
+            return sb.ToString();
+        }
     }
 }

@@ -38,7 +38,17 @@ namespace ExoLibrary.Classes
 
         public override string ToString()
         {
-            return $"{FirstName} {LastName}, Email : {Email}, Inscrit le : {RegistrationDate}, Créé le : {CreatedAt}, Modifié le : {UpdatedAt}";
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"        Nom        : {LastName}");
+            sb.AppendLine($"        Prénom     : {FirstName}");
+            sb.AppendLine($"        Email      : {Email}");
+            sb.AppendLine($"        Inscrit le : {RegistrationDate:dd/MM/yyyy}");
+            sb.AppendLine($"        Créé le    : {CreatedAt:dd/MM/yyyy HH:mm}");
+
+            if (UpdatedAt != null)
+                sb.AppendLine($"        Modifié le : {UpdatedAt:dd/MM/yyyy HH:mm}");
+
+            return sb.ToString();
         }
 
     }

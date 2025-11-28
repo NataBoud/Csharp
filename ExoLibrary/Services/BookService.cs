@@ -53,7 +53,8 @@ namespace ExoLibrary.Services
             int index = 1;
             foreach (var book in books)
             {
-                Console.WriteLine($"{index++}. {book.Title} by {book.Author} (ISBN: {book.ISBN}) - Disponible : {book.IsAvailable}");
+                Console.WriteLine($"        ........... Livre {index++} ...........");
+                Console.WriteLine(book); // <-- appelle automatiquement book.ToString()
             }
         }
 

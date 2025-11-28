@@ -86,12 +86,18 @@ namespace ExoLibrary.Services
                 return;
             }
 
-            foreach (var b in borrows)
+            int index = 1;
+            foreach (var borrow in borrows)
             {
-                var member = memberDao.GetOneById(b.MemberId);
-                var book = bookDao.GetOneById(b.BookId);
-                string status = b.ReturnDate == null ? "En cours" : $"Retourné le {b.ReturnDate.Value}";
-                Console.WriteLine($"{b.Id}. {book?.Title} emprunté par {member?.FirstName} {member?.LastName} - {status}");
+                // Remplir les propriétés pour l'affichage
+                var book = bookDao.GetOneById(borrow.BookId);
+                var member = memberDao.GetOneById(borrow.MemberId);
+
+                borrow.BookTitle = book?.Title;
+                borrow.MemberName = member != null ? $"{member.FirstName} {member.LastName}" : "Inconnu";
+
+                Console.WriteLine($"        .......... Emprunt {index++} ..........");
+                Console.WriteLine(borrow);  // utilise le ToString() amélioré de Borrow
             }
         }
 
@@ -107,11 +113,17 @@ namespace ExoLibrary.Services
                 return;
             }
 
-            foreach (var b in borrows)
+            int index = 1;
+            foreach (var borrow in borrows)
             {
-                var member = memberDao.GetOneById(b.MemberId);
-                var book = bookDao.GetOneById(b.BookId);
-                Console.WriteLine($"{b.Id}. {book?.Title} emprunté par {member?.FirstName} {member?.LastName}");
+                var book = bookDao.GetOneById(borrow.BookId);
+                var member = memberDao.GetOneById(borrow.MemberId);
+
+                borrow.BookTitle = book?.Title;
+                borrow.MemberName = member != null ? $"{member.FirstName} {member.LastName}" : "Inconnu";
+
+                Console.WriteLine($"        .......... Emprunt en cours {index++} ..........");
+                Console.WriteLine(borrow);
             }
         }
 

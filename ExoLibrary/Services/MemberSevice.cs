@@ -47,7 +47,12 @@ namespace ExoLibrary.Services
                 return;
             }
 
-            members.ForEach(Console.WriteLine);
+            int index = 1;
+            foreach (var member in members)
+            {
+                Console.WriteLine($"        ........... Membre {index++} ...........");
+                Console.WriteLine(member); // <-- appelle automatiquement member.ToString()
+            }
         }
 
         public void SearchMemberByEmail()

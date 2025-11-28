@@ -29,24 +29,69 @@ namespace ExoLibrary.IHM
             bool exit = false;
             while (!exit)
             {
-                Console.WriteLine("\n===== Bibliothèque Municipale =====");
-                Console.WriteLine("1. Gérer les livres");
-                Console.WriteLine("2. Gérer les membres");
-                Console.WriteLine("3. Gérer les emprunts");
-                Console.WriteLine("0. Quitter");
+                Console.Clear(); // Efface la console pour chaque affichage de menu
 
-                int choice = InputHelper.AskInt("Choix : ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(@"
+      _     _ _                          
+     | |   (_) |__  _ __ __ _ _ __ _   _ 
+     | |   | | '_ \| '__/ _` | '__| | | |
+     | |___| | |_) | | | (_| | |  | |_| |
+     |_____|_|_.__/|_|  \__,_|_|   \__, |
+                                   |___/  
+");
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("   ******************************************");
+                Console.WriteLine();
+                Console.WriteLine("             Bibliothèque Municipale         ");
+                Console.WriteLine();
+                Console.WriteLine("   ******************************************");
+                Console.WriteLine();
+                Console.WriteLine("             1. Gérer les livres             ");
+                Console.WriteLine();
+                Console.WriteLine("             2. Gérer les membres            ");
+                Console.WriteLine();
+                Console.WriteLine("             3. Gérer les emprunts           ");
+                Console.WriteLine();
+                Console.WriteLine("             0. Quitter                      ");
+                Console.WriteLine();
+                Console.WriteLine("   ******************************************");
+                Console.ResetColor(); 
+
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                int choice = InputHelper.AskInt("   Sélectionnez une option : ");
+                Console.ResetColor();
+
+                Console.WriteLine(); 
 
                 switch (choice)
                 {
                     case 1: ShowBooksMenu(); break;
                     case 2: ShowMembersMenu(); break;
                     case 3: ShowBorrowsMenu(); break;
-                    case 0: exit = true; break;
-                    default: Console.WriteLine("Choix invalide !"); break;
+                    case 0:
+                        exit = true;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Merci d'avoir utilisé la bibliothèque !");
+                        Console.ResetColor();
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Choix invalide ! Veuillez réessayer.");
+                        Console.ResetColor();
+                        break;
+                }
+
+                if (!exit)
+                {
+                    Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                    Console.ReadKey();
                 }
             }
-        }
 
+        }
     }
 }
