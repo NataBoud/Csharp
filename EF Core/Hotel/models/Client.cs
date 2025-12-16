@@ -6,9 +6,10 @@ using System.Text;
 namespace Hotel.models
 {
   
-    internal class Client
+    public class Client
     {
-        public int Id { get; set; }
+        [Key]
+        public int Identifiant { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -20,13 +21,14 @@ namespace Hotel.models
 
         [Required]
         [Phone]
-        public string NumeroTelephone { get; set; }
+        public string? Telephone { get; set; }
 
+        public List<Reservation> Reservations { get; set; }
 
 
         public override string ToString()
         {
-            return $"{Nom} {Prenom} - {NumeroTelephone}";
+            return $"{Nom} {Prenom} - {Telephone}";
         }
     }
 }

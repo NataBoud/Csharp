@@ -50,26 +50,7 @@ internal class Program
         //    Console.WriteLine(r);
         //}
 
-        Console.WriteLine("Clients par ordre alphabétique :");
 
-        // Récupérer tous les clients et les trier par Nom
-        var clientsTries = clientRepo.GetAll()
-                                     .OrderBy(c => c.Nom)
-                                     .ThenBy(c => c.Prenom);
-
-        foreach (var client in clientsTries)
-        {
-            Console.WriteLine(client);
-        }
-
-        var chambresLibres = chambreRepo.GetAll()
-                                       .Where(c => c.Statut == StatutChambre.Libre)
-                                       .OrderBy(c => c.Id); 
-
-        foreach (var ch in chambresLibres)
-        {
-            Console.WriteLine(ch); 
-        }
 
 
     }

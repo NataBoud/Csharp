@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Hotel.data
 {
-    internal class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         private readonly string _connectionString;
 
@@ -23,10 +23,9 @@ namespace Hotel.data
         }
 
         // DbSets
-        public DbSet<Client> Clients { get; set; }
         public DbSet<Chambre> Chambres { get; set; }
+        public DbSet<Client> Clients { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Configuration pour MySQL

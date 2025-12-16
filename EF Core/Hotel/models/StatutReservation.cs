@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hotel.models
 {
-    internal enum StatutReservation
+    public enum StatutReservation
     {
         prevue,
         enCours,

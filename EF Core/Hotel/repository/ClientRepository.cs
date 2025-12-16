@@ -7,63 +7,52 @@ using System.Text;
 
 namespace Hotel.repository
 {
-    internal class ClientRepository : IRepository<models.Client, int>
+    internal class ClientRepository : BaseRepository<Client, int>
     {
-
-        private readonly ApplicationDbContext _db;
-
-        public ClientRepository(ApplicationDbContext db)
+        public ClientRepository(ApplicationDbContext db) : base(db)
         {
-            _db = db;
-        }
-        
-        public Client? Add(Client entity)
-        {
-            EntityEntry<Client> clientEntity = _db.Add(entity);
-            _db.SaveChanges();
-            return clientEntity.Entity;
+
         }
 
-        public bool Delete(int id)
+        public override Client? GetById(int entityId)
         {
-            var client = GetById(id);
-            if (client == null) return false;
-            _db.Remove(client);
-            return _db.SaveChanges() == 1;
+            return _db.Clients.Find(entityId);
         }
 
-
-        public Client? Get(Func<Client, bool> predicate)
-        {
-            return _db.Clients.FirstOrDefault(predicate);
-        }
-
-        public List<Client> GetAll()
+        public override List<Client> GetAll()
         {
             return _db.Clients.ToList();
         }
 
-        public List<Client> GetAll(Func<Client, bool> predicate)
+        public override Client Update(int id, Client entity)
         {
-            return _db.Clients.Where(predicate).ToList();
-        }
+            Client clientFound = GetById(id);
 
-        public Client? GetById(int id)
-        {
-            return _db.Clients.FirstOrDefault(c => c.Id == id);
-        }
+            if (clientFound is null)
+                return null;
 
-        public Client? Update(int id, Client entity)
-        {
-            var client = GetById(id);
-            if (client == null) return null;
-
-            if (client.Nom != entity.Nom) client.Nom = entity.Nom;
-            if (client.Prenom != entity.Prenom) client.Prenom = entity.Prenom;
-            if (client.NumeroTelephone != entity.NumeroTelephone) client.NumeroTelephone = entity.NumeroTelephone;
+            if (clientFound.Nom != entity.Nom)
+                clientFound.Nom = entity.Nom;
+            if (clientFound.Prenom != entity.Prenom)
+                clientFound.Prenom = entity.Prenom;
+            if (clientFound.Telephone != entity.Telephone)
+                clientFound.Telephone = entity.Telephone;
 
             _db.SaveChanges();
-            return client;
+            return clientFound;
         }
+
+        public override bool Delete(int entityId)
+        {
+            Client clientFound = GetById(entityId);
+
+            if (clientFound is null)
+                return false;
+
+            _db.Remove(clientFound);
+            return _db.SaveChanges() == 1;
+        }
+
+
     }
 }

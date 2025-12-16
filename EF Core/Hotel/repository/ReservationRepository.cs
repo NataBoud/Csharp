@@ -7,67 +7,48 @@ using System.Linq;
 
 namespace Hotel.repository
 {
-    internal class ReservationRepository : IRepository<Reservation, int>
+    internal class ReservationRepository : BaseRepository<Reservation, int>
     {
-        private readonly ApplicationDbContext _db;
-
-        public ReservationRepository(ApplicationDbContext db)
+        public ReservationRepository(ApplicationDbContext db) : base(db)
         {
-            _db = db;
+          
+        }
+        public override Reservation? GetById(int entityId)
+        {
+            return _db.Reservations.Find(entityId);
         }
 
-        public Reservation? Add(Reservation entity)
-        {
-            EntityEntry<Reservation> reservationEntity = _db.Add(entity);
-            _db.SaveChanges();
-            return reservationEntity.Entity;
-        }
-
-        public bool Delete(int id)
-        {
-            var reservation = GetById(id);
-            if (reservation == null) return false;
-            _db.Remove(reservation);
-            return _db.SaveChanges() == 1;
-        }
-
-        public Reservation? Get(Func<Reservation, bool> predicate)
-        {
-            return _db.Reservations.FirstOrDefault(predicate);
-        }
-
-        public List<Reservation> GetAll()
+        public override List<Reservation> GetAll()
         {
             return _db.Reservations.ToList();
         }
 
-        public List<Reservation> GetAll(Func<Reservation, bool> predicate)
+        public override Reservation Update(int id, Reservation entity)
         {
-            return _db.Reservations.Where(predicate).ToList();
-        }
+            Reservation reservation = GetById(id);
 
-        public Reservation? GetById(int id)
-        {
-            return _db.Reservations.FirstOrDefault(r => r.Id == id);
-        }
+            if (reservation is null)
+                return null;
 
-        public Reservation? Update(int id, Reservation entity)
-        {
-            var reservation = GetById(id);
-            if (reservation == null) return null;
-
-            reservation.Client = entity.Client;
-            reservation.ClientId = entity.Client?.Id;
-
-            reservation.Chambre = entity.Chambre;
-            reservation.ChambreId = entity.Chambre?.Id;
-
-            reservation.DateDebut = entity.DateDebut;
-            reservation.DateFin = entity.DateFin;
-            reservation.Statut = entity.Statut;
+            if (reservation.Statut != entity.Statut)
+                reservation.Statut = entity.Statut;
+            if (reservation.Client != entity.Client)
+                reservation.Client = entity.Client;
 
             _db.SaveChanges();
             return reservation;
         }
+
+        public override bool Delete(int entityId)
+        {
+            Reservation reservation = GetById(entityId);
+
+            if (reservation is null)
+                return false;
+
+            reservation.Statut = StatutReservation.annulee;
+            return _db.SaveChanges() == 1;
+        }
+
     }
 }

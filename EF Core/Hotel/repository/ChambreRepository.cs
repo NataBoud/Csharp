@@ -7,63 +7,54 @@ using System.Linq;
 
 namespace Hotel.repository
 {
-    internal class ChambreRepository : IRepository<Chambre, int>
+    internal class ChambreRepository : BaseRepository<Chambre, int>
     {
-        private readonly ApplicationDbContext _db;
-
-        public ChambreRepository(ApplicationDbContext db)
+        public ChambreRepository(ApplicationDbContext db) : base(db)
         {
-            _db = db;
         }
 
-        public Chambre? Add(Chambre entity)
+        public override Chambre? GetById(int entityId)
         {
-            EntityEntry<Chambre> chambreEntity = _db.Add(entity);
-            _db.SaveChanges();
-            return chambreEntity.Entity;
+            return _db.Chambres.Find(entityId);
         }
 
-        public bool Delete(int id)
-        {
-            var chambre = GetById(id);
-            if (chambre == null) return false;
-            _db.Remove(chambre);
-            return _db.SaveChanges() == 1;
-        }
-
-        public Chambre? Get(Func<Chambre, bool> predicate)
-        {
-            return _db.Chambres.FirstOrDefault(predicate);
-        }
-
-        public List<Chambre> GetAll()
+        public override List<Chambre> GetAll()
         {
             return _db.Chambres.ToList();
         }
 
-        public List<Chambre> GetAll(Func<Chambre, bool> predicate)
+        public override Chambre Update(int id, Chambre entity)
         {
-            return _db.Chambres.Where(predicate).ToList();
-        }
+            Chambre chambre = GetById(id);
 
-        public Chambre? GetById(int id)
-        {
-            return _db.Chambres.FirstOrDefault(c => c.Id == id);
-        }
+            if (chambre is null)
+                return null;
 
-        public Chambre? Update(int id, Chambre entity)
-        {
-            var chambre = GetById(id);
-            if (chambre == null) return null;
-
-            chambre.NbLit = entity.NbLit;
-            chambre.PrixParNuit = entity.PrixParNuit;
-            chambre.Statut = entity.Statut;
-            chambre.Client = entity.Client;
-            chambre.ClientId = entity.Client?.Id;
+            if (chambre.Statut != entity.Statut)
+                chambre.Statut = entity.Statut;
+            if (chambre.NombreLits == entity.NombreLits)
+                chambre.NombreLits = entity.NombreLits;
+            if (chambre.Tarif != entity.Tarif)
+                chambre.Tarif = entity.Tarif;
 
             _db.SaveChanges();
             return chambre;
+        }
+
+        public override bool Delete(int entityId)
+        {
+            Chambre chambre = GetById(entityId);
+
+            if (chambre is null)
+                return false;
+
+            _db.Remove(chambre);
+            return _db.SaveChanges() == 1;
+        }
+
+        public List<Chambre> getAllFreeRooms()
+        {
+            return _db.Chambres.Where(c => c.Statut == StatutChambre.Libre).ToList();
         }
     }
 }
