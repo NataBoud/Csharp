@@ -2,12 +2,11 @@
 {
     public interface IService<Treceive, TSend>
     {
-
-        TSend Create(Treceive receive);
-        TSend Update(Treceive receive, int id);
+        Task<TSend> Create(Treceive receive);
+        Task<TSend> Update(Treceive receive, int id);
         bool Delete(int id);
-        TSend GetById(int id);
-        List<TSend> GetAll();
+        Task<TSend> GetById(int id);
+        Task<List<TSend>> GetAll();
 
     }
 }
