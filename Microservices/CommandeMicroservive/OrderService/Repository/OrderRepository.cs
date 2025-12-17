@@ -1,0 +1,70 @@
+﻿using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+using OrderService.Models;
+
+namespace OrderService.Repository
+{
+    public class OrderRepository : IRepository<Order>
+    {
+        private readonly AppDbContext _dbContext;
+
+        public OrderRepository(AppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public Order GetById(int id)
+        {
+            return _dbContext.Orders
+                .Include(o => o.Products)
+                .FirstOrDefault(o => o.Id == id);
+        }
+
+        public List<Order> GetAll()
+        {
+            return _dbContext.Orders
+                .Include(o => o.Products)
+                .ToList();
+        }
+
+        public Order Create(Order entity)
+        {
+            _dbContext.Orders.Add(entity);
+            _dbContext.SaveChanges();
+            return entity;
+        }
+
+        public Order Update(Order entity)
+        {
+            var order = _dbContext.Orders
+                .Include(o => o.Products)
+                .FirstOrDefault(o => o.Id == entity.Id);
+
+            if (order == null)
+                return null;
+
+            order.UserId = entity.UserId;
+
+            //  remplace les produits
+            _dbContext.RemoveRange(order.Products);
+            order.Products = entity.Products;
+
+            _dbContext.SaveChanges();
+            return order;
+        }
+
+        public bool Delete(int id)
+        {
+            var order = _dbContext.Orders
+                .Include(o => o.Products)
+                .FirstOrDefault(o => o.Id == id);
+
+            if (order == null)
+                return false;
+
+            _dbContext.Orders.Remove(order);
+            _dbContext.SaveChanges();
+            return true;
+        }
+    }
+}
