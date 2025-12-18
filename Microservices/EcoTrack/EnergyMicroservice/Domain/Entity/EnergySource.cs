@@ -4,6 +4,6 @@
     {
         Solaire, // 0
         Eolienne, // 1
-        Fossile // 3
+        Fossile // 2
     }
 }

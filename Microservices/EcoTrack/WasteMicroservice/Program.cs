@@ -1,23 +1,39 @@
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+using WasteMicroservice.Application.Service;
+using WasteMicroservice.Domain.Ports;
+using WasteMicroservice.Infrastructure.Data;
+using WasteMicroservice.Infrastructure.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddScoped<IWasteRepository, WasteRepository>();
+builder.Services.AddScoped<IWasteService, WasteService>();
+
+
+string connectionString = builder.Configuration.GetConnectionString("default");
+builder.Services.AddDbContext<AppDbContext>(option =>
+    option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
