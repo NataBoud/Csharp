@@ -83,18 +83,19 @@ namespace OrderService.Service
         }
 
         // Get order by id
-        public OrderSend GetById(int id)
+        public async Task<OrderSend> GetById(int id)
         {
             var order = _repository.GetById(id);
             if (order == null) return null;
-            return EntityToDto(order);
+            return await Task.FromResult(EntityToDto(order));
         }
 
         // Get all orders
-        public List<OrderSend> GetAll()
+        public async Task<List<OrderSend>> GetAll()
         {
             var orders = _repository.GetAll();
-            return orders.Select(EntityToDto).ToList();
+            var list = orders.Select(EntityToDto).ToList();
+            return await Task.FromResult(list);
         }
     }
 }
