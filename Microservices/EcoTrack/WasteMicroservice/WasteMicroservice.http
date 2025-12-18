@@ -1,0 +1,6 @@
+@WasteMicroservice_HostAddress = http://localhost:5025
+
+GET {{WasteMicroservice_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

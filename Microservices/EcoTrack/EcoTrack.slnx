@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="EcoDashboardService/EcoDashboardService.csproj" />
+  <Project Path="EnergyMicroservice/EnergyMicroservice.csproj" />
+  <Project Path="Gateway/Gateway.csproj" />
+  <Project Path="TransportMicroservice/TransportMicroservice.csproj" />
+  <Project Path="WasteMicroservice/WasteMicroservice.csproj" />
+</Solution>
