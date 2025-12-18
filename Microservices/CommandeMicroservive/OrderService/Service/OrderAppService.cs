@@ -38,13 +38,32 @@ namespace OrderService.Service
             return order;
         }
 
-        private OrderSend EntityToDto(Order order)
+        private async Task<OrderSend> EntityToDtoAsync(Order order)
         {
-            return new OrderSend()
+            var products = new List<OrderProductSend>();
+
+            foreach (var p in order.Products)
+            {
+                // Appel au ProductService pour récupérer le vrai nom et prix
+                var productInfo = await _productClient.GetRequest(p.ProductId.ToString());
+                if (productInfo == null)
+                    throw new Exception($"Product {p.ProductId} not found");
+
+                products.Add(new OrderProductSend
+                {
+                    ProductId = p.ProductId,
+                    Quantity = p.Quantity,
+                    ProductName = productInfo.Name,
+                    Price = productInfo.Price
+                });
+            }
+
+            return new OrderSend
             {
                 Id = order.Id,
                 UserId = order.UserId,
-                CreatedAt = order.CreatedAt
+                CreatedAt = order.CreatedAt,
+                Products = products
             };
         }
 
@@ -63,7 +82,9 @@ namespace OrderService.Service
             }
 
             var order = _repository.Create(DtoToEntity(receive, null));
-            return EntityToDto(order);
+
+            // Utiliser la version async pour récupérer ProductName et Price
+            return await EntityToDtoAsync(order);
         }
 
         // Update an existing order
@@ -73,7 +94,8 @@ namespace OrderService.Service
             if (order == null) return null;
 
             order = _repository.Update(DtoToEntity(receive, id));
-            return EntityToDto(order);
+
+            return await EntityToDtoAsync(order);
         }
 
         // Delete an order by id
@@ -87,15 +109,22 @@ namespace OrderService.Service
         {
             var order = _repository.GetById(id);
             if (order == null) return null;
-            return await Task.FromResult(EntityToDto(order));
+
+            return await EntityToDtoAsync(order);
         }
 
         // Get all orders
         public async Task<List<OrderSend>> GetAll()
         {
             var orders = _repository.GetAll();
-            var list = orders.Select(EntityToDto).ToList();
-            return await Task.FromResult(list);
+            var list = new List<OrderSend>();
+
+            foreach (var order in orders)
+            {
+                list.Add(await EntityToDtoAsync(order));
+            }
+
+            return list;
         }
     }
 }

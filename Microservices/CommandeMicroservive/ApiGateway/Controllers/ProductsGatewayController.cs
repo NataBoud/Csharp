@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
 
 namespace ApiGateway.Controllers
 {
@@ -33,23 +32,15 @@ namespace ApiGateway.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromBody] object body)
         {
-            var body = await new StreamReader(Request.Body).ReadToEndAsync();
-
-            var content = new StringContent(
-                body,
-                Encoding.UTF8,
-                "application/json"
-            );
-
-            var response = await _httpClient.PostAsync(
+            var response = await _httpClient.PostAsJsonAsync(
                 "https://localhost:7234/api/product",
-                content
+                body
             );
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            return StatusCode((int)response.StatusCode, responseBody);
+            var content = await response.Content.ReadAsStringAsync();
+            return StatusCode((int)response.StatusCode, content);
         }
     }
 }
