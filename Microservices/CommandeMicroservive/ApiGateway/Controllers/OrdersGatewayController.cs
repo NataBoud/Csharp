@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace ApiGateway.Controllers
 {
@@ -33,15 +34,21 @@ namespace ApiGateway.Controllers
 
         // POST api/orders
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] object body)
+        public async Task<IActionResult> Create()
         {
-            var response = await _httpClient.PostAsJsonAsync(
-                "https://localhost:7041/api/Order",
-                body
+            // Lire le body brut
+            var body = await new StreamReader(Request.Body).ReadToEndAsync();
+
+            var content = new StringContent(body, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(
+                "https://localhost:7041/api/Order", 
+                content
             );
 
-            var content = await response.Content.ReadAsStringAsync();
-            return StatusCode((int)response.StatusCode, content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return StatusCode((int)response.StatusCode, responseBody);
         }
 
         // PUT api/orders/{id}
