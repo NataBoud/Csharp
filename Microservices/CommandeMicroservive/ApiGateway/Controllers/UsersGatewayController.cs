@@ -1,56 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApiGateway.DTO;
+using ApiGateway.RestClient;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 
 namespace ApiGateway.Controllers
 {
+    [Route("/api/[controller]")]
     [ApiController]
-    [Route("api/users")]
     public class UsersGatewayController : ControllerBase
     {
-        private readonly HttpClient _httpClient;
+        private readonly RestClient<UserSend, UserReceive> _restClient;
 
-        public UsersGatewayController(HttpClient httpClient)
+        public UsersGatewayController()
         {
-            _httpClient = httpClient;
+            _restClient = new RestClient<UserSend, UserReceive>("https://localhost:7144/api/user");
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<List<UserSend>> GetAll()
         {
-            var response = await _httpClient.GetAsync("https://localhost:7144/api/user");
-            var content = await response.Content.ReadAsStringAsync();
-
-            return StatusCode((int)response.StatusCode, content);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var response = await _httpClient.GetAsync($"https://localhost:7144/api/user/{id}");
-            var content = await response.Content.ReadAsStringAsync();
-
-            return StatusCode((int)response.StatusCode, content);
+            return await _restClient.GetListRequest("");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create()
+        public async Task<UserSend> PostUser([FromBody] UserReceive receive)
         {
-            var body = await new StreamReader(Request.Body).ReadToEndAsync();
-
-            var content = new StringContent(
-                body,
-                Encoding.UTF8,
-                "application/json"
-            );
-
-            var response = await _httpClient.PostAsync(
-                "https://localhost:7144/api/user",
-                content
-            );
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            return StatusCode((int)response.StatusCode, responseBody);
+            return await _restClient.PostRequest("", receive);
         }
+
     }
 }
 
