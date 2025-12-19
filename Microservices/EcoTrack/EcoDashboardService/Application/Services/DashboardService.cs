@@ -9,7 +9,7 @@ namespace EcoDashboardService.Application.Services
         private readonly WasteApiClient _wasteClient;
         private readonly TransportApiClient _transportClient;
 
-        // Ici on instancie directement les clients avec les URLs
+        // instancier les clients avec les URLs
         public DashboardService()
         {
             _energyClient = new EnergyApiClient("https://localhost:7159/api/energy/");
@@ -19,7 +19,7 @@ namespace EcoDashboardService.Application.Services
 
         public async Task<DashboardDtoSend> GetDashboard()
         {
-            // Appels aux microservices via les clients spécifiques
+            // Appels aux microservices 
             var energies = await _energyClient.GetAllAsync();
             var wastes = await _wasteClient.GetAllAsync();
             var transports = await _transportClient.GetAllAsync();
