@@ -7,6 +7,7 @@ namespace TransportMicroservice.Domain.Ports
         Transport? GetById(Guid id);
         List<Transport> GetAll();
         Transport Add(Transport transport);
-        Transport? Update(Transport waste);
+        Transport? Update(Transport transport);
+        bool Delete(Guid id);
     }
 }

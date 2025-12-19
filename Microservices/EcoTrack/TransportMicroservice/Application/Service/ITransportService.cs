@@ -9,6 +9,7 @@ namespace TransportMicroservice.Application.Service
         TransportDtoSend Create(TransportDtoReceive receive);
         TransportDtoSend Update(Guid id, TransportDtoReceive receive);
         double GetEmissionById(Guid id);
+        bool Delete(Guid id);
     }
 }
 

@@ -73,6 +73,12 @@ namespace TransportMicroservice.Application.Service
             return transport.EmissionCO2; // utilise directement la propriété calculée
         }
 
+        // Delete a transport by id
+        public bool Delete(Guid id)
+        {
+            return _repository.Delete(id);
+        }
+
         // ===== Mapping =====
         private TransportDtoSend MapToResponse(Transport transport)
         {
@@ -82,7 +88,7 @@ namespace TransportMicroservice.Application.Service
                 Mode = transport.Mode,
                 DistanceKm = transport.DistanceKm,
                 FacteurEmission = transport.FacteurEmission,
-                EmissionCO2 = transport.DistanceKm * transport.FacteurEmission
+                EmissionCO2 = transport.EmissionCO2
             };
         }
 

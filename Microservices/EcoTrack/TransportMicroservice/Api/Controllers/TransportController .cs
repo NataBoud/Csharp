@@ -45,7 +45,7 @@ namespace TransportMicroservice.Api.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(new { Message = ex.Message });
+                return NotFound(new { ex.Message });
             }
         }
 
@@ -60,8 +60,8 @@ namespace TransportMicroservice.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = transport.Id }, transport);
         }
 
-        // PATCH: api/transport/{id}
-        [HttpPatch("{id}")]
+        // PUT: api/transport/{id}
+        [HttpPut("{id}")]
         public IActionResult Update(Guid id, [FromBody] TransportDtoReceive receive)
         {
             if (!ModelState.IsValid)
@@ -72,6 +72,17 @@ namespace TransportMicroservice.Api.Controllers
                 return NotFound(new { Message = $"Transport with id {id} not found" });
 
             return Ok(updated);
+        }
+
+        // DELETE: api/transport/{id}
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            var result = _service.Delete(id);
+            if (!result)
+                return NotFound(new { Message = "Transport not found" }); // 404
+
+            return NoContent(); // 204 No Content
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WasteMicroservice.Application.DTO;
 using WasteMicroservice.Application.Service;
-using WasteMicroservice.Domain.Ports;
 
 namespace WasteMicroservice.Api.Controllers
 {

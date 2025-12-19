@@ -1,4 +1,6 @@
-﻿namespace TransportMicroservice.Domain.Entity
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TransportMicroservice.Domain.Entity
 
 {
     public enum TransportMode
@@ -19,6 +21,8 @@
 
         public double FacteurEmission { get; set; } // g CO2 / km
 
+        // annotation pour ne pas sauvegarder en bdd 
+        [NotMapped]
         public double EmissionCO2 => DistanceKm * FacteurEmission;
     }
 }
