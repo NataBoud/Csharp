@@ -38,7 +38,7 @@ namespace WasteMicroservice.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = waste.Id }, waste);
         }
 
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public IActionResult Update(Guid id, [FromBody] WasteDtoReceive receive)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
