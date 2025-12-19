@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace EcoDashboardService.Infrastructure.Clients
+namespace EcoDashboardService.Infrastructure.Clients.Rest
 {
     public class RestClient<TGet, TPost>
     {

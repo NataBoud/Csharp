@@ -6,7 +6,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Injection du service uniquement
+// Injection du service 
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 var app = builder.Build();

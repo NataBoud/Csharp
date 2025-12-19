@@ -1,4 +1,5 @@
 ﻿using EcoDashboardService.Application.DTO;
+using EcoDashboardService.Infrastructure.Clients.Rest;
 
 namespace EcoDashboardService.Infrastructure.Clients
 {
