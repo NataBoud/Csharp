@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ConsultationService/ConsultationService.csproj" />
+  <Project Path="HealthDashboardService/HealthDashboardService.csproj" />
+  <Project Path="PatientService/PatientService.csproj" />
+  <Project Path="PrescriptionService/PrescriptionService.csproj" />
+</Solution>
