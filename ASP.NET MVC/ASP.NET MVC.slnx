@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Contacts/Contacts.csproj" />
+  <Project Path="Products/Products.csproj" Id="9efc5ea8-bbcd-4a4b-837a-6c378ccfb3ea" />
+</Solution>

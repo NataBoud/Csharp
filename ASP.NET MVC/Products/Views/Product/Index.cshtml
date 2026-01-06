@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Product>
+
+<h1>Liste des produits</h1>
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameForInnerType((Product p) => p.Name)</th>
+            <th>@Html.DisplayNameForInnerType((Product p) => p.Price)</th>
+            <th>@Html.DisplayNameForInnerType((Product p) => p.Stock)</th>
+            <th>@Html.DisplayNameForInnerType((Product p) => p.IsOnDiscount)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price €</td>
+                <td>@product.Stock</td>
+                <td>@product.IsOnDiscount</td>
+                <td>
+                    <a class="btn btn-sm btn-primary"
+                       href="/Product/Details/@product.Id">Détails</a>
+
+                    <a class="btn btn-sm btn-danger"
+                       href="/Product/Delete/@product.Id">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-success mt-3" href="/Product/CreateRandom">
+    Ajouter un produit aléatoire
+</a>
