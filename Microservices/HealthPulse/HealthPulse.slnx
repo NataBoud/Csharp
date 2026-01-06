@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="ConsultationService/ConsultationService.csproj" />
+  <Project Path="Gateway/Gateway.csproj" Id="666121a3-00e9-47b9-803a-686f26802c89" />
   <Project Path="HealthDashboardService/HealthDashboardService.csproj" />
   <Project Path="PatientService/PatientService.csproj" />
   <Project Path="PrescriptionService/PrescriptionService.csproj" />
