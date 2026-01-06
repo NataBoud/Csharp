@@ -1,5 +1,42 @@
 ﻿@{
-    ViewData["Title"] = "Contacts";
+    var contacts = ViewBag.Contacts as IEnumerable<Contact>;
 }
 
-<h1>Je suis la page pour afficher les contacts...</h1>
+<h1>@ViewData["Title"]</h1>
+
+<a href="/Contact/Create" class="btn btn-success mb-3">
+    Créer un contact
+</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameForInnerType((Contact c) => c.Name)
+            </th>
+            <th>
+                @Html.DisplayNameForInnerType((Contact c) => c.Email)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (contacts != null)
+        {
+            foreach (var c in contacts)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td>@c.Email</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary"
+                           href="/Contact/Details/@c.Id">
+                            Détails
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

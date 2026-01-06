@@ -1,5 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Ajouter contact";
-}
+﻿@model Contact
 
-<h1>Je suis la page pour ajouter un contact...</h1>
+<h1>Ajouter un contact</h1>
+
+<form method="post" asp-action="Create" class="mt-3">
+
+    <div class="mb-3">
+        <label class="form-label">@Html.DisplayNameFor(m => m.Name)</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">@Html.DisplayNameFor(m => m.Email)</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Ajouter</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

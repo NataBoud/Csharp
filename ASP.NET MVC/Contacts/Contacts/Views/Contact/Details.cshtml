@@ -1,8 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Détail contact";
-}
+﻿@model Contact
 
+<h1>@Html.DisplayNameForModel()</h1>
 
-<h1>
-    Je suis la page pour afficher un contact @ViewData["ContactId"]
-</h1>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text">@Model.Email</p>
+        <p class="text-muted">ID : @Model.Id</p>
+    </div>
+</div>
+
+<a class="btn btn-secondary mt-3" href="/Contact/Index">Retour</a>
