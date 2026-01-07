@@ -1,10 +1,8 @@
 ﻿@model Product
 
-@{
-    ViewBag.Title = $"Détails - {Model.Name}";
-    Layout = "_Layout";
+@{ViewBag.Title = $"Détails - {Model.Name}";} 
 
-}
+<h1 class="mb-3">@ViewBag.Title</h1>
 
 <div class="card" style="max-width: 400px;">
     <div class="card-header">

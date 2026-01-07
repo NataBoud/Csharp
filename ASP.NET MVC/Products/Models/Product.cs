@@ -15,7 +15,7 @@ namespace Products.Models
         [Display(Name = "Stock")]
         public int Stock { get; set; }
 
-        [Display(Name = "En promotion")]
+        [Display(Name = "Promotion")]
         public bool IsOnDiscount { get; set; }
 
         // Propriété calculée pour l'affichage
