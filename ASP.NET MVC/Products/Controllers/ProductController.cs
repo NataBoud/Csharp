@@ -3,14 +3,15 @@ using Products.Services;
 
 namespace Products.Controllers
 {
-    public class ProductController(IProductService productService) : Controller
+    public class ProductController : Controller
     {
-        private readonly IProductService _productService = productService;
+        private readonly IProductService _productService;
 
-        //public ProductController(IProductService productService)
-        //{
-        //    _productService = productService;
-        //}
+        // Injection de dépendances via le constructeur
+        public ProductController(IProductService productService)
+        {
+            _productService = productService;
+        }
 
         public IActionResult Index()
         {

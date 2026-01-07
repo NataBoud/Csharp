@@ -2,6 +2,11 @@
 
 <h1>Liste des produits</h1>
 
+
+<a class="btn btn-success mb-3" asp-action="CreateRandom">
+    Ajouter un produit aléatoire
+</a>
+
 <table class="table table-striped mt-4">
     <thead>
         <tr>
@@ -17,21 +22,33 @@
         {
             <tr>
                 <td>@product.Name</td>
-                <td>@product.Price €</td>
-                <td>@product.Stock</td>
-                <td>@product.IsOnDiscount</td>
                 <td>
-                    <a class="btn btn-sm btn-primary"
-                       href="/Product/Details/@product.Id">Détails</a>
-
-                    <a class="btn btn-sm btn-danger"
-                       href="/Product/Delete/@product.Id">Supprimer</a>
+                    @(product.IsOnDiscount
+                                    ? Html.Raw(
+                                    $"<span class='text-decoration-line-through text-muted'>{product.Price:C}</span> " +
+                                    $"<span class='text-danger fw-bold'>{product.DiscountedPrice:C}</span>")
+                                    : product.Price.ToString("C"))
+                </td>
+                <td>
+                    <span class="badge @(product.Stock < 10 ? "bg-danger" : "bg-success")">
+                        @product.Stock
+                    </span>
+                </td>
+                <td>
+                    <span class="@(product.IsOnDiscount ? "badge bg-warning text-dark" : "text-muted")">
+                        @(product.IsOnDiscount ? "-20%" : "Non")
+                    </span>
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@product.Id">Détails</a>
+                    <form asp-action="Delete" asp-route-id="@product.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Supprimer ce produit ?');">
+                            Supprimer
+                        </button>
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<a class="btn btn-success mt-3" href="/Product/CreateRandom">
-    Ajouter un produit aléatoire
-</a>

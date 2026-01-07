@@ -7,10 +7,13 @@ namespace Products.Services
         private readonly static List<Product> _products =
         [
             new Product { Id = 1, Name = "Clavier", Price = 49.99m, Stock = 10, IsOnDiscount = false },
-            new Product { Id = 2, Name = "Souris", Price = 29.99m, Stock = 20, IsOnDiscount = true }
+            new Product { Id = 2, Name = "Souris", Price = 29.99m, Stock = 20, IsOnDiscount = true },
+            new Product { Id = 3, Name = "Casque Audio", Price = 149.99m, Stock = 50, IsOnDiscount = false },
+            new Product { Id = 4, Name = "Clavier Mécanique", Price = 89.99m, Stock = 25, IsOnDiscount = true },
+            new Product { Id = 5, Name = "Souris Gaming", Price = 59.99m, Stock = 40, IsOnDiscount = false }
         ];
 
-        private static int _nextId = 3;
+        private static int _nextId = 6;
 
         public IEnumerable<Product> GetAll()
         {
@@ -44,7 +47,7 @@ namespace Products.Services
             var product = new Product
             {
                 Id = _nextId++,
-                Name = RandomString("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 6),
+                Name = $"Product-{RandomString("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 6)}",
                 Price = random.Next(5, 200),
                 Stock = random.Next(0, 50),
                 IsOnDiscount = random.Next(0, 2) == 1
