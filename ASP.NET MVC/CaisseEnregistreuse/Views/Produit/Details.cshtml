@@ -1,0 +1,37 @@
+﻿@model CaisseEnregistreuse.Models.Produit
+
+@{
+    ViewData["Title"] = $"Détails du produit : {Model.Nom}";
+}
+
+<div class="container my-5">
+    <div class="row g-4 d-flex align-items-stretch flex-column flex-md-row">
+        <!-- Image produit -->
+        <div class="col-12 col-md-6">
+            <img src="https://picsum.photos/400/300"
+                 class="w-100 h-100 rounded"
+                 alt="@Model.Nom"
+                 style="object-fit: cover; max-height: 800px;">
+        </div>
+
+        <!-- Infos produit -->
+        <div class="col-12 col-md-6 d-flex flex-column">
+            <h2 class="mb-4">@ViewData["Title"]</h2>
+
+            <div class="fw-bold mb-2">Description :</div>
+            <p class="mb-4">@Model.Description</p>
+
+            <div class="mb-2"><strong>Prix :</strong> @Model.Prix.ToString("C")</div>
+            <div class="mb-2"><strong>Quantité :</strong> @Model.QuantiteStock</div>
+            <div class="mb-2"><strong>Catégorie :</strong> <span class="badge bg-secondary">@Model.Categorie?.Nom</span></div>
+
+            <div class="mt-auto d-flex gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-4">Éditer</a>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
+                    <button type="submit" class="btn btn-danger mt-4">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="CaisseEnregistreuse/CaisseEnregistreuse.csproj" Id="b58b745d-04de-4d7a-8127-453115cc888a" />
   <Project Path="Contacts/Contacts.csproj" />
   <Project Path="Products/Products.csproj" Id="9efc5ea8-bbcd-4a4b-837a-6c378ccfb3ea" />
 </Solution>
