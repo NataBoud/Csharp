@@ -53,8 +53,13 @@
                             <td class="text-end">@produit.Prix.ToString("C")</td>
                             <td class="text-end">@produit.Total.ToString("C")</td>
                             <td class="text-center">
-                                <a asp-action="Supprimer" asp-route-produitId="@produit.ProduitId" class="btn btn-sm btn-outline-danger"
-                                   onclick="return confirm('Voulez-vous supprimer ce produit du panier ?');">Supprimer</a>
+                                
+
+                                <form asp-action="Supprimer" asp-route-produitId="@produit.ProduitId" method="post" onsubmit="return confirm('Voulez-vous supprimer ce produit du panier ?');" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm" title="Supprimer">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }
@@ -66,8 +71,8 @@
             <h4>Total : <span class="text-primary fw-bold">@ViewBag.Total?.ToString("C")</span></h4>
 
             <div class="d-flex gap-2 flex-wrap">
-                <a asp-action="Vider" class="btn btn-outline-danger">Vider le panier</a>
-                <button class="btn btn-success">Passer commande</button>
+                <a asp-action="Vider" class="btn btn-outline-secondary">Vider le panier</a>
+                <button class="btn btn-primary">Passer commande</button>
             </div>
         </div>
     }
