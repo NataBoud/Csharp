@@ -1,5 +1,9 @@
+/*:root {
+--bs-btn-border-color: #3d89f7 !important;
+}*/
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -36,4 +40,16 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.btn-outline-primary {
+    --bs-btn-border-color: #0d6efd8f !important;
+}
+
+.btn-outline-danger {
+    --bs-btn-border-color: #dc354585 !important;
+}
+
+.btn-outline-secondary {
+    --bs-btn-border-color: #6c757d70 !important;
 }

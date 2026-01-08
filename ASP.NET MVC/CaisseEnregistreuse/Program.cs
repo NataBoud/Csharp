@@ -11,9 +11,7 @@ builder.Services.AddControllersWithViews();
 // HttpContextAccessor (déjà présent)
 builder.Services.AddHttpContextAccessor();
 
-// ----------------------------
 // SESSION CONFIGURATION
-// ----------------------------
 builder.Services.AddDistributedMemoryCache(); // Nécessaire pour stocker la session en mémoire
 builder.Services.AddSession(options =>
 {
@@ -22,9 +20,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;             // nécessaire même si l'utilisateur refuse les cookies
 });
 
-// ----------------------------
+
 // Configure Entity Framework with MySQL
-// ----------------------------
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrEmpty(connectionString))
 {
@@ -33,9 +30,8 @@ if (string.IsNullOrEmpty(connectionString))
 builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-// ----------------------------
-// Enregistrement des services
-// ----------------------------
+
+// Enregistrement des service
 builder.Services.AddScoped<ICategorieService, CategorieService>();
 builder.Services.AddScoped<IProduitService, ProduitService>();
 builder.Services.AddScoped<IPanierService, PanierService>();
@@ -45,24 +41,30 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Produit/Error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
-// ----------------------------
 // SESSION MIDDLEWARE
-// ----------------------------
 app.UseAuthorization();
 app.UseSession(); // doit être après UseRouting mais avant UseEndpoints ou MapControllerRoute
+
+// Middleware temporaire pour debug de la session
+app.Use(async (context, next) =>
+{
+    var panierJson = context.Session.GetString("Panier"); // récupère la session "Panier"
+    Console.WriteLine($"Panier actuel : {panierJson ?? "vide"}");
+    await next.Invoke(); // continue la pipeline
+});
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Produit}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

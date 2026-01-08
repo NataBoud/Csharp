@@ -2,6 +2,7 @@
 using CaisseEnregistreuse.Services.Helpers;
 using CaisseEnregistreuse.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CaisseEnregistreuse.Controllers
 {
@@ -23,24 +24,16 @@ namespace CaisseEnregistreuse.Controllers
         }
 
         // Ajouter un produit au panier
-        public async Task<IActionResult> Ajouter(int produitId, int quantite = 1)
+        private async Task<int> AjouterProduitAuPanier(int produitId, int quantite)
         {
-            // Récupérer le produit depuis la base
-            var produit = await _produitService.GetProduitByIdAsync(produitId);
-            if (produit == null)
-                return NotFound();
+            var produit = await _produitService.GetProduitByIdAsync(produitId) ?? throw new Exception("Produit introuvable");
+            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier")
+                         ?? new List<PanierItem>();
 
-            // Récupérer le panier depuis la session
-            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier") ?? new List<PanierItem>();
-
-            // Vérifier si le produit est déjà dans le panier
             var item = panier.FirstOrDefault(p => p.ProduitId == produitId);
             if (item != null)
-            {
-                item.Quantite += quantite; // augmenter la quantité
-            }
+                item.Quantite += quantite;
             else
-            {
                 panier.Add(new PanierItem
                 {
                     ProduitId = produit.Id,
@@ -48,13 +41,26 @@ namespace CaisseEnregistreuse.Controllers
                     Prix = produit.Prix,
                     Quantite = quantite
                 });
-            }
 
-            // Sauvegarder le panier en session
             HttpContext.Session.SetObjectAsJson("Panier", panier);
+            return panier.Sum(p => p.Quantite);
+        }
 
+        // Ajouter un produit au panier via action normale
+        public async Task<IActionResult> Ajouter(int produitId)
+        {
+            await AjouterProduitAuPanier(produitId, 1);
             return RedirectToAction("Index");
         }
+
+        // Ajouter un produit au panier via AJAX
+        [HttpPost]
+        public async Task<IActionResult> AjouterAjax(int produitId)
+        {
+            var total = await AjouterProduitAuPanier(produitId, 1);
+            return Json(new { success = true, totalItems = total });
+        }
+
 
         // Supprimer un produit du panier
         public IActionResult Supprimer(int produitId)
@@ -91,6 +97,24 @@ namespace CaisseEnregistreuse.Controllers
 
             HttpContext.Session.SetObjectAsJson("Panier", panier);
             return RedirectToAction("Index");
+        }
+
+        // Obtenir le nombre total d'articles dans le panier (pour mise à jour AJAX)
+        public IActionResult Compteur()
+        {
+            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier")
+                         ?? new List<PanierItem>();
+
+            return Json(new
+            {
+                totalItems = panier.Sum(p => p.Quantite)
+            });
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model CaisseEnregistreuse.Models.Produit
 
 @{
-    ViewData["Title"] = $"Détails du produit : {Model.Nom}";
+    ViewData["Title"] = $"{Model.Nom}";
 }
 
 <div class="container my-5">
@@ -13,27 +13,38 @@
 
         <!-- Infos produit -->
         <div class="col-12 col-md-6 d-flex flex-column">
-            <h2 class="mb-4">@ViewData["Title"]</h2>
-
+            <div class=" d-flex justify-content-between gap-2">
+                <h2 class="mb-4">@ViewData["Title"]</h2>
+                <div class="d-flex justify-content-center align-items-center gap-2">
+                    <!-- Éditer -->
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary rounded-pill btn-sm " title="Éditer">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <!-- Supprimer -->
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
+                        <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm" title="Supprimer">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
             <div class="fw-bold mb-2">Description :</div>
             <p class="mb-4">@Model.Description</p>
-
             <div class="mb-2"><strong>Prix :</strong> @Model.Prix.ToString("C")</div>
             <div class="mb-2"><strong>Quantité :</strong> @Model.QuantiteStock</div>
-            <div class="mb-2 d-flex align-items-center gap-2"><strong>Catégorie :</strong> <span class="badge bg-secondary" style="padding-bottom: .375rem">@Model.Categorie?.Nom</span></div>
-
-            <div class="mt-auto d-flex justify-content-between gap-2">
-                <div>
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-4">Éditer</a>
-                    <a asp-controller="Panier" asp-action="Ajouter" asp-route-produitId="@Model.Id" class="btn btn-primary mt-4">Ajouter au panier </a>
-                    <a asp-action="Index" class="btn btn-outline-secondary mt-4">Retour</a>
-                </div>
-               
-                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
-                    <button type="submit" class="btn btn-outline-danger mt-4">Supprimer</button>
-                </form>
+            <div class="mb-2 d-flex align-items-center gap-2">
+                <strong>Catégorie :</strong><span class="badge bg-secondary" style="padding-bottom: .375rem">@Model.Categorie?.Nom</span>
+            </div>
+            <div class="mt-auto d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Retour</a>
+                <!-- Bouton Ajouter ajax -->
+                <button type="button" class="btn btn-primary btn-ajouter-panier" data-produit-id="@Model.Id">
+                    + Ajouter au panier
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+
 
