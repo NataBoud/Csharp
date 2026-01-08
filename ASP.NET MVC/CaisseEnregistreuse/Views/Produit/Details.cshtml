@@ -8,10 +8,7 @@
     <div class="row g-4 d-flex align-items-stretch flex-column flex-md-row">
         <!-- Image produit -->
         <div class="col-12 col-md-6">
-            <img src="https://picsum.photos/400/300"
-                 class="w-100 h-100 rounded"
-                 alt="@Model.Nom"
-                 style="object-fit: cover; max-height: 800px;">
+            <img src="https://picsum.photos/400/300" class="w-100 h-100 rounded" alt="@Model.Nom"  style="object-fit: cover; max-height: 800px;">
         </div>
 
         <!-- Infos produit -->
@@ -23,12 +20,17 @@
 
             <div class="mb-2"><strong>Prix :</strong> @Model.Prix.ToString("C")</div>
             <div class="mb-2"><strong>Quantité :</strong> @Model.QuantiteStock</div>
-            <div class="mb-2"><strong>Catégorie :</strong> <span class="badge bg-secondary">@Model.Categorie?.Nom</span></div>
+            <div class="mb-2 d-flex align-items-center gap-2"><strong>Catégorie :</strong> <span class="badge bg-secondary" style="padding-bottom: .375rem">@Model.Categorie?.Nom</span></div>
 
-            <div class="mt-auto d-flex gap-2">
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-4">Éditer</a>
+            <div class="mt-auto d-flex justify-content-between gap-2">
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-4">Éditer</a>
+                    <a asp-controller="Panier" asp-action="Ajouter" asp-route-produitId="@Model.Id" class="btn btn-primary mt-4">Ajouter au panier </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary mt-4">Retour</a>
+                </div>
+               
                 <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
-                    <button type="submit" class="btn btn-danger mt-4">Supprimer</button>
+                    <button type="submit" class="btn btn-outline-danger mt-4">Supprimer</button>
                 </form>
             </div>
         </div>

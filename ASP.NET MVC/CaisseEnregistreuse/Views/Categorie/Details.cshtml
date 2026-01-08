@@ -1,4 +1,60 @@
-﻿@page
-@model CaisseEnregistreuse.Views.Categorie.DetailsModel
+﻿@model CaisseEnregistreuse.Models.Categorie
+
 @{
+    ViewData["Title"] = $"Détails de la catégorie : {Model.Nom}";
 }
+
+<div class="container my-5">
+
+    <!-- Titre -->
+    <h2 class=" mb-3 mb-md-4">@ViewData["Title"]</h2>
+
+    <div class="d-flex flex-column flex-md-row align-items-start justify-content-between gap-1 mb-4">
+        <!-- Infos catégorie -->
+        <div class="d-flex flex-row align-items-end">
+            <h4>@Model.Produits.Count produit@(Model.Produits.Count > 1 ? "s" : "") associé@(Model.Produits.Count > 1 ? "s" : "")</h4>
+        </div>
+        <!-- Actions catégorie -->
+        <div class="d-flex gap-2">
+            <a asp-action="Edit"asp-route-id="@Model.Id" class="btn btn-primary">Éditer</a>
+            <a asp-action="Index" class="btn btn-outline-secondary">Retour</a>
+        </div>
+    </div>
+  
+    <!-- Produits -->
+    @if (Model.Produits != null && Model.Produits.Any())
+    {
+        <div class="row g-4">
+            @foreach (var produit in Model.Produits)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+
+                        <!-- Image -->
+                        <img src="https://picsum.photos/300/200?random=@produit.Id" class="card-img-top" alt="@produit.Nom"style="height: 180px; object-fit: cover;">
+
+                        <div class="card-body d-flex flex-column">
+                            <!-- Nom -->
+                            <h6 class="card-title fw-bold">@produit.Nom</h6>
+                            <!-- Prix -->
+                            <p class="fw-bold fs-5 mb-2">@produit.Prix.ToString("C")</p>
+                            <!-- Actions -->
+                            <div class="mt-auto d-flex gap-2">
+                                <a asp-controller="Produit" asp-action="Details" asp-route-id="@produit.Id" class="btn btn-sm btn-outline-secondary w-100">Voir</a>
+                                <form asp-controller="Produit" asp-action="Delete" asp-route-id="@produit.Id"  method="post" onsubmit="return confirm('Supprimer ce produit ?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger w-100">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Aucun produit associé à cette catégorie.</p>
+    }
+
+</div>

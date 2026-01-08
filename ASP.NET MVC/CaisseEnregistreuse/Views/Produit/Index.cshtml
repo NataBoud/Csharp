@@ -1,47 +1,50 @@
 ﻿@model IEnumerable<CaisseEnregistreuse.Models.Produit>
 
 @{
-    ViewData["Title"] = "Liste des produits";
+    ViewData["Title"] = "Produits";
 }
 
-<h1 class="my-4 text-center">@ViewData["Title"]</h1>
+<div class="d-flex justify-content-between align-items-center my-5">
+    <h2>@ViewData["Title"]</h2>
+    <a asp-action="Create" class="btn btn-primary">+ Nouveau produit</a>
+</div>
 
 <div class="row g-4">
     @foreach (var produit in Model)
     {
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <div class="card h-100 shadow-sm">
-
-                <!-- Image (placeholder pour l'instant) -->
-                <img src="https://picsum.photos/300/200" class="card-img-top" alt="@produit.Nom">
+                <!-- Image -->
+                <img src="https://picsum.photos/300/200?random=@produit.Id" class="card-img-top" alt="@produit.Nom">
 
                 <div class="card-body d-flex flex-column">
                     <!-- Nom -->
-                    <h5 class="card-title">@produit.Nom</h5>
+                    <h5 class="card-title mb-3">@produit.Nom</h5>
 
-                    <!-- Catégorie -->
-                    <span class="badge bg-secondary mb-2 align-self-start">@produit.Categorie.Nom</span>
-                    <!-- Description -->
-                    <p class="card-text text-muted small text-truncate-2">@produit.Description</p>
-
-                    <div class="d-flex justify-content-between align-content-center mb-3">
-                        <!-- Prix -->
-                        <p class="fw-bold mb-0">@produit.Prix.ToString("C")</p>
+                    <div class="d-flex justify-content-start align-items-center mb-3 gap-2">
+                        <!-- Catégorie -->
+                        <span class="badge bg-secondary align-self-start" style="padding-bottom: .45rem">@produit.Categorie?.Nom</span>
                         <!-- Stock -->
                         @if (produit.QuantiteStock <= 5)
                         {
-                            <span class="badge bg-danger">Stock faible</span>
+                            <span class="badge bg-danger pt-1" style="padding-bottom: .45rem">Stock faible</span>
                         }
                         else
                         {
-                            <span class="badge bg-success">En stock</span>
+                            <span class="badge bg-success pt-0.5" style="padding-bottom: .45rem">En stock</span>
                         }
                     </div>
-                    <!-- Actions -->
-                    <div class="mt-auto d-flex gap-2">
-                        <a asp-action="Details"asp-route-id="@produit.Id"class="btn btn-sm btn-outline-secondary w-100">Détails</a>
-                    </div>
+                    <!-- Description -->
+                    <p class="card-text text-muted small text-truncate-2">@produit.Description</p>
 
+                    <div class="d-flex justify-content-between align-items-center gap-2">
+                        <!-- Prix -->
+                        <p class="fw-bold fs-5 mb-0">@produit.Prix.ToString("C")</p>
+                        <!-- Actions -->
+                        <div class="mt-auto d-flex gap-2">
+                            <a asp-action="Details"asp-route-id="@produit.Id"class="btn btn-sm btn-outline-secondary w-100">Détails</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

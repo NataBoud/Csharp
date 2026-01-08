@@ -22,7 +22,7 @@ namespace CaisseEnregistreuse.Controllers
             return View(produits);
         }
 
-        // création
+        // Création
         public async Task<IActionResult> Create()
         {
             ViewBag.Categories = await _categorieService.GetAllCategoriesAsync();
@@ -55,7 +55,7 @@ namespace CaisseEnregistreuse.Controllers
             return View(produit);
         }
 
-        // édition
+        // Edition
         public async Task<IActionResult> Edit(int id)
         {
             var produit = await _produitService.GetProduitByIdAsync(id);
@@ -99,9 +99,9 @@ namespace CaisseEnregistreuse.Controllers
             if (produit == null) return NotFound();
 
             return View(produit);
-        } 
+        }
 
-        // Supprimer
+        // Suppression
         public async Task<IActionResult> Delete(int id)
         {
             await _produitService.DeleteProduitAsync(id);

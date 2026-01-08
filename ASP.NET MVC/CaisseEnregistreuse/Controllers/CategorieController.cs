@@ -12,6 +12,7 @@ public class CategorieController : Controller
         _categorieService = categorieService;
     }
 
+    // Liste des produits
     public async Task<IActionResult> Index()
     {
         var categories = await _categorieService.GetAllCategoriesAsync();
@@ -19,6 +20,7 @@ public class CategorieController : Controller
         return View(categories);
     }
 
+    // Détails
     public async Task<IActionResult> Details(int id)
     {
         var categorie = await _categorieService.GetCategorieByIdAsync(id);
@@ -26,6 +28,7 @@ public class CategorieController : Controller
         return View(categorie);
     }
 
+    // Création
     public IActionResult Create() => View();
 
     [HttpPost]
@@ -38,13 +41,19 @@ public class CategorieController : Controller
             await _categorieService.AddCategorieAsync(categorie);
             return RedirectToAction(nameof(Index));
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex) // erreurs métier (unicité, règles, etc.)
         {
-            ModelState.AddModelError("", ex.Message);
-            return View(categorie);
+            ModelState.AddModelError(nameof(categorie.Nom), ex.Message);
         }
+        catch (Exception ex) // erreurs inattendues
+        {
+            ModelState.AddModelError("", "Une erreur inattendue est survenue : " + ex.Message);
+        }
+
+        return View(categorie);
     }
 
+    // Edition
     public async Task<IActionResult> Edit(int id)
     {
         var categorie = await _categorieService.GetCategorieByIdAsync(id);
@@ -62,13 +71,19 @@ public class CategorieController : Controller
             await _categorieService.UpdateCategorieAsync(categorie);
             return RedirectToAction(nameof(Index));
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex) // erreurs métier
         {
-            ModelState.AddModelError("", ex.Message);
-            return View(categorie);
+            ModelState.AddModelError(nameof(categorie.Nom), ex.Message);
         }
+        catch (Exception ex) // erreurs inattendues
+        {
+            ModelState.AddModelError("", "Une erreur inattendue est survenue : " + ex.Message);
+        }
+
+        return View(categorie);
     }
 
+    // Suppression
     public async Task<IActionResult> Delete(int id)
     {
         await _categorieService.DeleteCategorieAsync(id);

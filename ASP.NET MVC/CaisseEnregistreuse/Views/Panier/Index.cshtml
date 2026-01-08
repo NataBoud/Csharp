@@ -1,0 +1,74 @@
+﻿@model List<CaisseEnregistreuse.Models.PanierItem>
+
+@{
+    ViewData["Title"] = "Panier";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Votre panier est vide.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Produit</th>
+                        <th class="text-center">Quantité</th>
+                        <th class="text-end">Prix Unitaire</th>
+                        <th class="text-end">Sous-total</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var produit in Model)
+                    {
+                        <tr>
+                            <td>@produit.Nom</td>
+
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <!-- Diminuer quantité -->
+                                    <form asp-action="ModifierQuantite" method="post" class="d-inline">
+                                        <input type="hidden" name="produitId" value="@produit.ProduitId" />
+                                        <input type="hidden" name="variation" value="-1" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                                    </form>
+
+                                    <span>@produit.Quantite</span>
+
+                                    <!-- Augmenter quantité -->
+                                    <form asp-action="ModifierQuantite" method="post" class="d-inline">
+                                        <input type="hidden" name="produitId" value="@produit.ProduitId" />
+                                        <input type="hidden" name="variation" value="1" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                                    </form>
+                                </div>
+                            </td>
+
+                            <td class="text-end">@produit.Prix.ToString("C")</td>
+                            <td class="text-end">@produit.Total.ToString("C")</td>
+                            <td class="text-center">
+                                <a asp-action="Supprimer" asp-route-produitId="@produit.ProduitId" class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Voulez-vous supprimer ce produit du panier ?');">Supprimer</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4 gap-3">
+            <h4>Total : <span class="text-primary fw-bold">@ViewBag.Total?.ToString("C")</span></h4>
+
+            <div class="d-flex gap-2 flex-wrap">
+                <a asp-action="Vider" class="btn btn-outline-danger">Vider le panier</a>
+                <button class="btn btn-success">Passer commande</button>
+            </div>
+        </div>
+    }
+</div>
