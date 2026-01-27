@@ -1,5 +1,4 @@
 ﻿using CaisseEnregistreuse.Models;
-using CaisseEnregistreuse.Services.Helpers;
 using CaisseEnregistreuse.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,47 +8,41 @@ namespace CaisseEnregistreuse.Controllers
     public class PanierController : Controller
     {
         private readonly IProduitService _produitService;
+        private readonly IPanierService _panierService;
 
-        public PanierController(IProduitService produitService)
+        public PanierController(IProduitService produitService, IPanierService panierService)
         {
             _produitService = produitService;
+            _panierService = panierService;
         }
 
         // Affiche le panier
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier") ?? new List<PanierItem>();
-            ViewBag.Total = panier.Sum(p => p.Total);
-            return View(panier);
+            var panier = _panierService.GetPanier();
+
+            // Récupérer le stock disponible pour chaque produit
+            var panierAvecStock = new List<(PanierItem item, int stockDispo)>();
+
+            foreach (var item in panier)
+            {
+                var produit = await _produitService.GetProduitByIdAsync(item.ProduitId);
+                int stockDispo = produit?.QuantiteStock ?? 0;
+                panierAvecStock.Add((item, stockDispo));
+            }
+
+            ViewBag.Total = _panierService.CalculerTotal();
+            return View(panierAvecStock); //on envoie le bon type
         }
 
-        // Ajouter un produit au panier
-        private async Task<int> AjouterProduitAuPanier(int produitId, int quantite)
-        {
-            var produit = await _produitService.GetProduitByIdAsync(produitId) ?? throw new Exception("Produit introuvable");
-            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier")
-                         ?? new List<PanierItem>();
-
-            var item = panier.FirstOrDefault(p => p.ProduitId == produitId);
-            if (item != null)
-                item.Quantite += quantite;
-            else
-                panier.Add(new PanierItem
-                {
-                    ProduitId = produit.Id,
-                    Nom = produit.Nom,
-                    Prix = produit.Prix,
-                    Quantite = quantite
-                });
-
-            HttpContext.Session.SetObjectAsJson("Panier", panier);
-            return panier.Sum(p => p.Quantite);
-        }
 
         // Ajouter un produit au panier via action normale
         public async Task<IActionResult> Ajouter(int produitId)
         {
-            await AjouterProduitAuPanier(produitId, 1);
+            var produit = await _produitService.GetProduitByIdAsync(produitId);
+            if (produit != null)
+                _panierService.AjouterProduit(produit, 1);
+
             return RedirectToAction("Index");
         }
 
@@ -57,57 +50,64 @@ namespace CaisseEnregistreuse.Controllers
         [HttpPost]
         public async Task<IActionResult> AjouterAjax(int produitId)
         {
-            var total = await AjouterProduitAuPanier(produitId, 1);
-            return Json(new { success = true, totalItems = total });
+            var produit = await _produitService.GetProduitByIdAsync(produitId);
+            if (produit == null)
+                return Json(new { success = false, message = "Produit introuvable" });
+
+            _panierService.AjouterProduit(produit, 1);
+
+            // Vérifier si la quantité max est atteinte
+            var item = _panierService.GetPanier().FirstOrDefault(p => p.ProduitId == produitId);
+            bool quantiteMaxAtteinte = item != null && item.Quantite >= produit.QuantiteStock;
+
+            return Json(new
+            {
+                success = true,
+                totalItems = _panierService.GetPanier().Sum(p => p.Quantite),
+                quantiteMaxAtteinte
+            });
         }
 
+        // Modifier la quantité (+ ou -) via AJAX ou formulaire
+        [HttpPost]
+        public async Task<IActionResult> ModifierQuantite(int produitId, int variation)
+        {
+            await _panierService.ModifierQuantiteAsync(produitId, variation);
+            return RedirectToAction("Index");
+        }
 
         // Supprimer un produit du panier
         public IActionResult Supprimer(int produitId)
         {
-            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier") ?? new List<PanierItem>();
-            var item = panier.FirstOrDefault(p => p.ProduitId == produitId);
-            if (item != null)
-                panier.Remove(item);
-
-            HttpContext.Session.SetObjectAsJson("Panier", panier);
+            _panierService.SupprimerProduit(produitId);
             return RedirectToAction("Index");
         }
 
         // Vider le panier
         public IActionResult Vider()
         {
-            HttpContext.Session.Remove("Panier");
+            _panierService.ViderPanier();
             return RedirectToAction("Index");
         }
 
-        // Modifier la quantité d'un produit dans le panier (+ ou -)
-        [HttpPost]
-        public IActionResult ModifierQuantite(int produitId, int variation)
-        {
-            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier") ?? new List<PanierItem>();
-            var item = panier.FirstOrDefault(p => p.ProduitId == produitId);
-
-            if (item != null)
-            {
-                item.Quantite += variation;
-                if (item.Quantite < 1)
-                    item.Quantite = 1;
-            }
-
-            HttpContext.Session.SetObjectAsJson("Panier", panier);
-            return RedirectToAction("Index");
-        }
-
-        // Obtenir le nombre total d'articles dans le panier (pour mise à jour AJAX)
+        // Obtenir le nombre total d'articles dans le panier (pour le compteur AJAX du header)
         public IActionResult Compteur()
         {
-            var panier = HttpContext.Session.GetObjectFromJson<List<PanierItem>>("Panier")
-                         ?? new List<PanierItem>();
+            var totalItems = _panierService.GetPanier().Sum(p => p.Quantite);
+            return Json(new { totalItems });
+        }
+
+        // Get quantite pour la page Details produit ou le panier n est pas accesible
+        [HttpGet]
+        public IActionResult QuantiteProduit(int produitId)
+        {
+            var item = _panierService
+                .GetPanier()
+                .FirstOrDefault(p => p.ProduitId == produitId);
 
             return Json(new
             {
-                totalItems = panier.Sum(p => p.Quantite)
+                quantite = item?.Quantite ?? 0
             });
         }
 

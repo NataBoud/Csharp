@@ -60,7 +60,7 @@ app.Use(async (context, next) =>
     await next.Invoke(); // continue la pipeline
 });
 
-app.MapStaticAssets();
+app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "default",

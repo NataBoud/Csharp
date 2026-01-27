@@ -1,18 +1,21 @@
-﻿@model List<CaisseEnregistreuse.Models.PanierItem>
+﻿@model List<(CaisseEnregistreuse.Models.PanierItem item, int stockDispo)>
 
 @{
     ViewData["Title"] = "Panier";
 }
 
 <div class="container my-5">
-    <h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+    <h2 class="mb-4">@ViewData["Title"]</h2>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info text-center">Votre panier est vide.</div>
+        <div class="alert alert-warning text-center">Votre panier est vide.</div>
     }
     else
     {
+        <!-- Conteneur d'alertes -->
+        <div id="alertes-stock" class="mb-3"></div>
+
         <div class="table-responsive">
             <table class="table table-striped align-middle">
                 <thead class="table-light">
@@ -25,37 +28,53 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var produit in Model)
+                    @foreach (var entry in Model)
                     {
-                        <tr>
-                            <td>@produit.Nom</td>
+                        var produit = entry.item;
+                        int stockDispo = entry.stockDispo;
+                        bool maxAtteint = produit.Quantite >= stockDispo;
+
+                        <tr data-produit-id="@produit.ProduitId">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://picsum.photos/50/50?random=@produit.ProduitId"
+                                         alt="@produit.Nom"
+                                         class="product-thumbnail rounded" />
+                                    <a asp-controller="Produit"
+                                       asp-action="Details"
+                                       asp-route-id="@produit.ProduitId"
+                                       class="text-decoration-none text-dark fw-semibold">
+                                        @produit.Nom
+                                    </a>
+                                </div>
+                            </td>
 
                             <td class="text-center">
                                 <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <!-- Diminuer quantité -->
                                     <form asp-action="ModifierQuantite" method="post" class="d-inline">
                                         <input type="hidden" name="produitId" value="@produit.ProduitId" />
                                         <input type="hidden" name="variation" value="-1" />
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary px-3 py-2">-</button>
                                     </form>
 
-                                    <span>@produit.Quantite</span>
+                                    <span class="px-2">@produit.Quantite</span>
 
-                                    <!-- Augmenter quantité -->
-                                    <form asp-action="ModifierQuantite" method="post" class="d-inline">
-                                        <input type="hidden" name="produitId" value="@produit.ProduitId" />
-                                        <input type="hidden" name="variation" value="1" />
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
-                                    </form>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-secondary px-3 py-2 btn-ajouter-panier"
+                                            data-produit-id="@produit.ProduitId"
+                                            data-stock="@stockDispo"
+                                            @(maxAtteint ? "disabled" : "")>
+                                        +
+                                    </button>
                                 </div>
                             </td>
 
                             <td class="text-end">@produit.Prix.ToString("C")</td>
                             <td class="text-end">@produit.Total.ToString("C")</td>
                             <td class="text-center">
-                                
-
-                                <form asp-action="Supprimer" asp-route-produitId="@produit.ProduitId" method="post" onsubmit="return confirm('Voulez-vous supprimer ce produit du panier ?');" class="d-inline">
+                                <form asp-action="Supprimer" asp-route-produitId="@produit.ProduitId"
+                                      method="post" onsubmit="return confirm('Voulez-vous supprimer ce produit du panier ?');"
+                                      class="d-inline">
                                     <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm" title="Supprimer">
                                         <i class="bi bi-trash"></i>
                                     </button>
@@ -77,3 +96,4 @@
         </div>
     }
 </div>
+

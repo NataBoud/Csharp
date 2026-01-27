@@ -1,6 +1,62 @@
-/*:root {
---bs-btn-border-color: #3d89f7 !important;
-}*/
+:root {
+    /* Couleur primaire globale */
+    --bs-primary: #8435be;
+    --bs-primary-rgb: 132, 53, 190;
+}
+/* BTN PRIMARY PLEIN */
+.btn-primary {
+    --bs-btn-bg: #8435be;
+    --bs-btn-border-color: #8435be;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-bg: #6b2b99;
+    --bs-btn-hover-border-color: #6b2b99;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #5a2380;
+    --bs-btn-active-border-color: #5a2380;
+    --bs-btn-active-color: #fff;
+    --bs-btn-disabled-bg: #8435be;
+    --bs-btn-disabled-border-color: #8435be;
+    --bs-btn-disabled-color: #ccc;
+}
+
+/* BTN OUTLINE PRIMARY */
+.btn-outline-primary {
+    --bs-btn-color: #8435be;
+    --bs-btn-border-color: #8435be;
+    --bs-btn-hover-bg: #8435be;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-border-color: #8435be;
+    --bs-btn-active-bg: #6b2b99;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-border-color: #6b2b99;
+    --bs-btn-disabled-color: #ccc;
+    --bs-btn-disabled-border-color: #8435be;
+}
+
+.btn-outline-primary {
+    --bs-btn-border-color: #8435be91 !important;
+}
+
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #8435be57 !important;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #8435be5c !important;
+}
+
+.btn-outline-danger {
+    --bs-btn-border-color: #dc354585 !important;
+}
+
+.btn-outline-secondary {
+    --bs-btn-border-color: #6c757d70 !important;
+}
+
+a {
+    color: #8435be;
+}
 
 html {
     font-size: 14px;
@@ -42,14 +98,128 @@ body {
     text-overflow: ellipsis;
 }
 
-.btn-outline-primary {
-    --bs-btn-border-color: #0d6efd8f !important;
+
+
+/* Card catégorie */
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: .75rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.btn-outline-danger {
-    --bs-btn-border-color: #dc354585 !important;
+/* Image en background */
+.category-card-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.6);
+    transition: transform 0.4s ease, filter 0.4s ease;
 }
 
-.btn-outline-secondary {
-    --bs-btn-border-color: #6c757d70 !important;
+/* Card catégorie */
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: .75rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
+/* Image en background */
+.category-card-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.6);
+    transition: transform 0.4s ease, filter 0.4s ease;
+    z-index: 0;
+}
+
+/* Zone centrale cliquable (Details) */
+.category-card > a {
+    position: relative;
+    z-index: 1;
+    min-height: 200px;
+    padding: 1.5rem;
+    color: #fff;
+}
+
+/* Texte centré */
+.category-card h4,
+.category-card .badge {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer avec actions */
+.category-card .card-footer {
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+}
+
+/* Hover doux */
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.category-card:hover .category-card-bg {
+    transform: scale(1.05);
+    filter: brightness(0.7);
+}
+
+
+.category-title {
+    font-size: 2rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Désactiver hover sur mobile */
+@media (max-width: 768px) {
+    .category-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+        .category-card:hover .category-card-bg {
+            transform: none;
+            filter: brightness(0.6);
+        }
+}
+
+@media (max-width: 576px) {
+    .category-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* Miniature du produit dans le tableau */
+.product-thumbnail {
+    width: 50px; /* largeur fixe */
+    height: 50px; /* hauteur fixe */
+    object-fit: cover; /* pour que l'image remplisse le carré sans déformation */
+    border-radius: 0.25rem; /* coins arrondis */
+    border: 1px solid #dee2e6; /* petit contour léger */
+}
+
+/* Conteneur d'alertes */
+#alertes-stock .alert {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    margin-bottom: 0.5rem;
+}
+
+/* Classe pour déclencher l'apparition */
+#alertes-stock .alert.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.btn-quantite-panier {
+    display: none;
+}
+

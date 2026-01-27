@@ -8,6 +8,6 @@ namespace CaisseEnregistreuse.Services.Interfaces
         Task<Produit?> GetProduitByIdAsync(int id);
         Task AddProduitAsync(Produit produit);
         Task UpdateProduitAsync(Produit produit);
-        Task DeleteProduitAsync(int id);
+        Task DeleteProduitAsync(int id); 
     }
 }

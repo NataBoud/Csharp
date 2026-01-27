@@ -5,16 +5,16 @@
 }
 
 <div class="container my-5">
-    <div class="row g-4 d-flex align-items-stretch flex-column flex-md-row">
+    <div class="row g-4 d-flex  flex-column flex-md-row">
         <!-- Image produit -->
         <div class="col-12 col-md-6">
-            <img src="https://picsum.photos/400/300" class="w-100 h-100 rounded" alt="@Model.Nom"  style="object-fit: cover; max-height: 800px;">
+            <img src="https://picsum.photos/400/300" class="w-100 h-100 rounded" alt="@Model.Nom"  style="object-fit: cover; min-height: 500px; max-height: 800px;">
         </div>
 
         <!-- Infos produit -->
         <div class="col-12 col-md-6 d-flex flex-column">
-            <div class=" d-flex justify-content-between gap-2">
-                <h2 class="mb-4">@ViewData["Title"]</h2>
+            <div class=" d-flex justify-content-between gap-2 mb-4">
+                <h2>@ViewData["Title"]</h2>
                 <div class="d-flex justify-content-center align-items-center gap-2">
                     <!-- Éditer -->
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary rounded-pill btn-sm " title="Éditer">
@@ -28,23 +28,40 @@
                     </form>
                 </div>
             </div>
-            <div class="fw-bold mb-2">Description :</div>
-            <p class="mb-4">@Model.Description</p>
+            
             <div class="mb-2"><strong>Prix :</strong> @Model.Prix.ToString("C")</div>
             <div class="mb-2"><strong>Quantité :</strong> @Model.QuantiteStock</div>
             <div class="mb-2 d-flex align-items-center gap-2">
                 <strong>Catégorie :</strong><span class="badge bg-secondary" style="padding-bottom: .375rem">@Model.Categorie?.Nom</span>
             </div>
+
+            <div class="fw-bold mt-3 mb-2">Description :</div>
+            <p class="mb-4">@Model.Description</p>
+
+            <!-- alertes limit stock -->
+            <div id="alertes-stock" class="my-2"></div>
+
             <div class="mt-auto d-flex justify-content-end gap-2">
                 <a asp-action="Index" class="btn btn-outline-secondary">Retour</a>
                 <!-- Bouton Ajouter ajax -->
-                <button type="button" class="btn btn-primary btn-ajouter-panier" data-produit-id="@Model.Id">
+                <button type="button" class="btn btn-primary btn-ajouter-panier" data-stock="@Model.QuantiteStock" data-produit-id="@Model.Id">
                     + Ajouter au panier
                 </button>
+
+                <!-- Contrôle quantité -->
+                <div class="d-flex gap-2 align-items-center btn btn-primary btn-quantite-panier px-3 py-1">
+                    <button type="button" class="btn btn-sm btn-outline-light btn-moins">-</button>
+                    <span class="fw-bold compteur-panier text-white">0</span>
+                    <button type="button" class="btn btn-sm btn-outline-light btn-plus">+</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/details-produit.js" asp-append-version="true"></script>
+}
 
 
 
