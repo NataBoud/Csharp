@@ -1,0 +1,146 @@
+﻿@page "/inscription"
+
+<PageTitle>Inscription</PageTitle>
+
+<h3 class="mb-4">Inscription à un événement</h3>
+
+<div class="card mb-4">
+    <div class="card-body">
+
+        <!-- Nom -->
+        <div class="mb-3">
+            <label class="form-label">Nom complet</label>
+            <input type="text" class="form-control" @bind="nom" @bind:event="oninput" />
+
+            @if (!string.IsNullOrWhiteSpace(nom))
+            {
+                <small class="text-success">Nom saisi : <strong>@nom</strong></small>
+            }
+            else
+            {
+                <small class="text-danger">Veuillez saisir votre nom</small>
+            }
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" @bind="email" @bind:event="oninput" />
+
+            @if (!string.IsNullOrWhiteSpace(email))
+            {
+                <small class="text-success">Email saisi : <strong>@email</strong></small>
+            }
+            else
+            {
+                <small class="text-danger">Veuillez saisir votre email</small>
+            }
+        </div>
+
+        <!-- Nombre de participants -->
+        <div class="mb-3">
+            <label class="form-label">
+                Nombre de participants : <strong>@nombreParticipants</strong>
+            </label>
+
+            <input type="range" class="form-range"  min="1" max="5" @bind="nombreParticipants" />
+
+            <small class="text-info">
+                Prix actuel : <strong>@(nombreParticipants * 20) €</strong>
+            </small>
+        </div>
+
+        <!-- Conditions -->
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" @bind="accepteConditions" />
+
+            <label class="form-check-label">J'accepte les conditions</label>
+        </div>
+
+        @if (accepteConditions)
+        {
+            <span class="badge bg-success mb-2">Conditions acceptées</span>
+        }
+        else
+        {
+            <span class="badge bg-danger mb-2">Conditions non acceptées</span>
+        }
+
+        <!-- VIP -->
+        <div class="form-check mb-3 mt-2">
+            <input class="form-check-input" type="checkbox" @bind="estVIP" />
+
+            <label class="form-check-label">Option VIP (+50€)</label>
+        </div>
+
+        @if (estVIP)
+        {
+            <span class="badge bg-warning text-dark mb-3">Option VIP activée</span>
+        }
+
+        <!-- Bouton -->
+        <div class="mt-4">
+            <button class="btn btn-primary" @onclick="Inscrire" disabled="@(!FormulaireValide())">
+                S'inscrire
+            </button>
+        </div>
+
+        @if (!string.IsNullOrEmpty(messageErreur))
+        {
+            <div class="alert alert-danger mt-3">
+                @messageErreur
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Confirmation -->
+@if (inscriptionConfirmee)
+{
+    <div class="alert alert-success">
+        <h5 class="alert-heading">Inscription confirmée !</h5>
+        <p>Nom : <strong>@nom</strong></p>
+        <p>Email : <strong>@email</strong></p>
+        <p>Total payé : <strong>@CalculerTotal() €</strong></p>
+    </div>
+}
+
+@code {
+    private string nom = "";
+    private string email = "";
+    private int nombreParticipants = 1;
+    private bool accepteConditions = false;
+    private bool estVIP = false;
+    private bool inscriptionConfirmee = false;
+    private string messageErreur = "";
+
+    private int CalculerTotal()
+    {
+        int total = nombreParticipants * 20;
+
+        if (estVIP)
+        {
+            total += 50;
+        }
+
+        return total;
+    }
+
+    private bool FormulaireValide()
+    {
+        return !string.IsNullOrWhiteSpace(nom) && !string.IsNullOrWhiteSpace(email) && accepteConditions;
+    }
+
+    private void Inscrire()
+    {
+        if (!FormulaireValide())
+        {
+            messageErreur = "Veuillez remplir tous les champs et accepter les conditions.";
+            inscriptionConfirmee = false;
+            return;
+        }
+
+        messageErreur = "";
+        inscriptionConfirmee = true;
+    }
+}

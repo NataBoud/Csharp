@@ -10,14 +10,9 @@
     <div class="card-body">
         <p><strong>Nom :</strong> @langage</p>
         <p><strong>Version :</strong> @version</p>
-        <p><strong>Statut :</strong>
-            <span class="badge @(isActive ? "bg-success" : "bg-danger")">
-                @(isActive ? "Actif" : "Inactif")
-            </span>
-        </p>
+        <p><strong>Statut :</strong><span class="badge @(isActive ? "bg-success" : "bg-danger")">@(isActive ? "Actif" : "Inactif")</span></p>
     </div>
 </div>
-
 
 <div class="card mb-3">
     <div class="card-header"> Date et Heure</div>
@@ -54,9 +49,6 @@
         <p><strong>Inversé:</strong> @Inverser(nom)</p>
     </div>
 </div>
-
-
-
 
 @code {
 
