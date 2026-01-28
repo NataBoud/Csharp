@@ -1,0 +1,80 @@
+﻿
+
+
+<h3 class="mb-4">📝 TodoList Blazor</h3>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <input class="form-control mb-2"
+               placeholder="Nouvelle tâche..."
+               @bind="newTaskTitle"
+               @bind:event="oninput" />
+
+        <button class="btn btn-primary w-100"
+                @onclick="AddTask"
+                disabled="@string.IsNullOrWhiteSpace(newTaskTitle)">
+            ➕ Ajouter
+        </button>
+    </div>
+</div>
+
+@if (tasks.Count == 0)
+{
+    <div class="alert alert-info">
+        📭 Aucune tâche pour le moment
+    </div>
+}
+else
+{
+    <div class="list-group mb-3">
+        @foreach (var task in tasks)
+        {
+            <TodoItem Task="task"
+                      OnDelete="DeleteTask"
+                      OnToggle="ToggleTask" />
+        }
+    </div>
+
+    <div class="alert @(RemainingCount == 0 ? "alert-success" : "alert-warning")">
+        @if (RemainingCount == 0)
+        {
+            <strong>🎉 Félicitations ! Toutes les tâches sont terminées.</strong>
+        }
+        else
+        {
+            <strong>@RemainingCount tâche(s) restante(s)</strong>
+        }
+    </div>
+}
+
+@code {
+    private List<TodoTask> tasks = new();
+    private string newTaskTitle = "";
+    private int nextId = 1;
+
+    private void AddTask()
+    {
+        tasks.Add(new TodoTask
+        {
+            Id = nextId++,
+            Title = newTaskTitle,
+            IsDone = false
+        });
+
+        newTaskTitle = "";
+    }
+
+    private void DeleteTask(int id)
+    {
+        tasks.RemoveAll(t => t.Id == id);
+    }
+
+    private void ToggleTask(int id)
+    {
+        var task = tasks.FirstOrDefault(t => t.Id == id);
+        if (task != null)
+            task.IsDone = !task.IsDone;
+    }
+
+    private int RemainingCount => tasks.Count(t => !t.IsDone);
+}

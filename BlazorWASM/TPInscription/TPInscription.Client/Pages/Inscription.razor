@@ -10,31 +10,44 @@
         <!-- Nom -->
         <div class="mb-3">
             <label class="form-label">Nom complet</label>
-            <input type="text" class="form-control" @bind="nom" @bind:event="oninput" />
 
             @if (!string.IsNullOrWhiteSpace(nom))
             {
-                <small class="text-success">Nom saisi : <strong>@nom</strong></small>
+                <small class="d-block mb-1">
+                    Nom saisi : <strong>@nom</strong>
+                </small>
             }
             else
             {
-                <small class="text-danger">Veuillez saisir votre nom</small>
+                <small class="d-block mb-1">
+                    Veuillez saisir votre nom
+                </small>
             }
+
+            <input type="text"
+                   class="form-control"
+                   @bind="nom"
+                   @bind:event="oninput" />
         </div>
+
 
         <!-- Email -->
         <div class="mb-3">
-            <label class="form-label">Email</label>
+         
+                <label class="form-label me-2">Email</label>
+
+                @if (!string.IsNullOrWhiteSpace(email))
+                {
+                <small class="d-block mb-1">Email saisi : <strong>@email</strong></small>
+                }
+                else
+                {
+                <small class="d-block mb-1">Veuillez saisir votre email</small>
+                }
+           
+            
             <input type="email" class="form-control" @bind="email" @bind:event="oninput" />
 
-            @if (!string.IsNullOrWhiteSpace(email))
-            {
-                <small class="text-success">Email saisi : <strong>@email</strong></small>
-            }
-            else
-            {
-                <small class="text-danger">Veuillez saisir votre email</small>
-            }
         </div>
 
         <!-- Nombre de participants -->
@@ -80,7 +93,7 @@
 
         <!-- Bouton -->
         <div class="mt-4">
-            <button class="btn btn-primary" @onclick="Inscrire" disabled="@(!FormulaireValide())">
+            <button class="btn btn-primary" @onclick="Inscrire">
                 S'inscrire
             </button>
         </div>
