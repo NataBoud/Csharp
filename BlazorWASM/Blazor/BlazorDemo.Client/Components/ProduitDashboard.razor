@@ -1,0 +1,56 @@
+﻿@using BlazorDemo.Shared.Models
+
+@code {
+    [Parameter]
+    public IEnumerable<Produit> Produits { get; set; } = Enumerable.Empty<Produit>();
+
+    private decimal ValeurTotale =>
+        Produits.Sum(p => p.Prix * p.Stock);
+}
+
+
+<div class="row g-3 mb-4">
+
+    <!-- Total produits -->
+    <div class="col-md-3">
+        <div class="card bg-primary shadow-sm border-0">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-white">@Produits.Count()</h3>
+                <div class="text-white">Total produits</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actifs -->
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-success text-white">
+            <div class="card-body text-center">
+                <h3 class="fw-bold">@Produits.Count(p => p.EstActif)</h3>
+                <div>Produits actifs</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rupture -->
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-warning text-white">
+            <div class="card-body text-center">
+                <h3 class="fw-bold">@Produits.Count(p => p.Stock == 0)</h3>
+                <div>En rupture</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Valeur totale -->
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-info text-white">
+            <div class="card-body text-center">
+                <h3 class="fw-bold">
+                    @ValeurTotale.ToString("C")
+                </h3>
+                <div>Valeur du stock</div>
+            </div>
+        </div>
+    </div>
+
+</div>

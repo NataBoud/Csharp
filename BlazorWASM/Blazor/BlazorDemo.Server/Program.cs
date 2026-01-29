@@ -30,12 +30,12 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    try { context.Database.EnsureCreated(); Console.WriteLine(" MySQL connecté!"); }
-    catch (Exception ex) { Console.WriteLine($" Erreur MySQL: {ex.Message}"); }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//    try { context.Database.EnsureCreated(); Console.WriteLine(" MySQL connecté!"); }
+//    catch (Exception ex) { Console.WriteLine($" Erreur MySQL: {ex.Message}"); }
+//}
 
 
 if (app.Environment.IsDevelopment())

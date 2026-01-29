@@ -1,0 +1,59 @@
+﻿@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+
+    [Parameter] public string Titre { get; set; } = "Confirmer la suppression";
+
+    // nom du produit
+    [Parameter] public string NomProduit { get; set; } = "";
+
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+
+    private async Task Fermer()
+    {
+        Visible = false;
+        await VisibleChanged.InvokeAsync(false);
+    }
+
+    private async Task Confirmer()
+    {
+        await OnConfirm.InvokeAsync(true);
+        await Fermer();
+    }
+}
+
+<div class="modal fade @(Visible ? "show d-block" : "")" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">@Titre</h5>
+                <button type="button" class="btn-close" @onclick="Fermer"></button>
+            </div>
+
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(NomProduit))
+                {
+                    <p>Voulez-vous vraiment supprimer le produit <strong>@NomProduit</strong> ?</p>
+                }
+                else
+                {
+                    <p>Voulez-vous vraiment supprimer cet élément ?</p>
+                }
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="Fermer">Annuler</button>
+                <button class="btn btn-danger" @onclick="Confirmer">Supprimer</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (Visible)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+

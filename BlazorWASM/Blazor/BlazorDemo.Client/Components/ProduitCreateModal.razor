@@ -1,0 +1,109 @@
+﻿@using BlazorDemo.Shared.Models
+@inject BlazorDemo.Client.Services.IProduitServiceClient ProduitService
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+    [Parameter] public EventCallback OnProduitCree { get; set; }
+
+    private ProduitDto dto = new();
+
+    // Liste des catégories
+    private List<string> categories = new()
+    {
+        "Informatique",
+        "Accessoires",
+        "Audio"
+    };
+
+    private async Task Creer()
+    {
+        var produit = await ProduitService.AjouterAsync(dto);
+
+        if (produit != null)
+        {
+            dto = new ProduitDto(); // reset form
+            await OnProduitCree.InvokeAsync();
+            await Fermer();
+        }
+    }
+
+    private async Task Fermer()
+    {
+        await VisibleChanged.InvokeAsync(false);
+    }
+}
+
+
+@if (Visible)
+{
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">➕ Ajouter un produit</h5>
+                    <button type="button" class="btn-close" @onclick="Fermer"></button>
+                </div>
+
+                <EditForm Model="dto" OnValidSubmit="Creer">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Nom</label>
+                            <InputText class="form-control" @bind-Value="dto.Nom" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <InputTextArea class="form-control" @bind-Value="dto.Description" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label">Prix</label>
+                                <InputNumber class="form-control" @bind-Value="dto.Prix" />
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Stock</label>
+                                <InputNumber class="form-control" @bind-Value="dto.Stock" />
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label">Catégorie</label>
+                            <InputSelect class="form-control" @bind-Value="dto.Categorie">
+                                <option value="">-- Sélectionnez --</option>
+                                @foreach (var cat in categories)
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <InputCheckbox class="form-check-input" @bind-Value="dto.EstActif" />
+                            <label class="form-check-label">Actif</label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" @onclick="Fermer">
+                            Annuler
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            Enregistrer
+                        </button>
+                    </div>
+                </EditForm>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show"></div>
+}
+
+

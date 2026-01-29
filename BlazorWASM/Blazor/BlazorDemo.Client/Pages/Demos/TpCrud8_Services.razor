@@ -1,0 +1,305 @@
+@page "/crud"
+@using BlazorDemo.Client.Components
+@using BlazorDemo.Client.Services
+@using BlazorDemo.Shared.Models
+
+@inject IProduitServiceClient ProduitService
+@inject IJSRuntime JS
+
+@code {
+    private List<Produit> produits = new();
+    private bool chargement = true;
+    private bool afficherModal = false;
+
+    protected override async Task OnInitializedAsync()
+        => await Charger();
+
+    private async Task Charger()
+    {
+        chargement = true;
+        produits = await ProduitService.ObtenirTousAsync();
+        chargement = false;
+    }
+
+    private string GetCategorieBadge(string categorie)
+    {
+        // Mappe chaque catégorie à une couleur de badge Bootstrap
+        return categorie switch
+        {
+            "Informatique" => "bg-info text-white",
+            "Audio" => "bg-warning text-dark",
+            "Vêtements" => "bg-secondary text-white",
+            "Mobilier" => "bg-success text-white",
+            "Accessoires" => "bg-primary text-white",
+            _ => "bg-dark text-white" // couleur par défaut pour les autres catégories
+        };
+    }
+
+    private Produit? produitAModifier = null;
+
+    private void OuvrirModalModifier(Produit produit)
+    {
+        produitAModifier = new Produit
+        {
+            Id = produit.Id,
+            Nom = produit.Nom,
+            Description = produit.Description,
+            Prix = produit.Prix,
+            Stock = produit.Stock,
+            Categorie = produit.Categorie,
+            EstActif = produit.EstActif
+        };
+        afficherModalModifier = true;
+    }
+
+    // Pour le modal de confirmation de suppression
+    private bool afficherModalConfirm = false;
+    private int produitIdASupprimer = 0;
+    private string nomProduitASupprimer = "";
+
+    private bool afficherModalModifier = false;
+
+    private async Task ModifierProduit(ProduitDto dto)
+    {
+        if (produitAModifier == null) return;
+
+        await ProduitService.ModifierAsync(produitAModifier.Id, dto);
+        await Charger();
+        produitAModifier = null;
+        afficherModalModifier = false;
+    }
+
+    private void OuvrirModalSupprimer(Produit p)
+    {
+        produitIdASupprimer = p.Id;
+        nomProduitASupprimer = p.Nom;
+        afficherModalConfirm = true;
+    }
+
+    private async Task ConfirmerSuppression(bool confirmed)
+    {
+        if (confirmed)
+        {
+            var success = await ProduitService.SupprimerAsync(produitIdASupprimer);
+            if (success) await Charger();
+        }
+
+        produitIdASupprimer = 0;
+        nomProduitASupprimer = "";
+        afficherModalConfirm = false;
+    }
+
+    private string categorieSelectionnee = "";
+
+    // Liste dynamique de toutes les catégories présentes dans les produits
+    private IEnumerable<string> CategoriesDistinctes => produits
+        .Select(p => p.Categorie)   // Prend la catégorie de chaque produit
+        .Distinct()                 // Supprime les doublons
+        .OrderBy(c => c);           // Trie alphabétiquement
+
+
+    private async Task ChargerProduitsParCategorie()
+    {
+        chargement = true;
+
+        if (string.IsNullOrWhiteSpace(categorieSelectionnee))
+        {
+            // Si aucune catégorie sélectionnée, on charge tous les produits
+            produits = await ProduitService.ObtenirTousAsync();
+        }
+        else
+        {
+            // Sinon on charge seulement les produits de la catégorie
+            produits = await ProduitService.ObtenirParCategorieAsync(categorieSelectionnee);
+        }
+
+        chargement = false;
+    }
+
+    private async Task OnCategorieChange(ChangeEventArgs e)
+    {
+        categorieSelectionnee = e.Value?.ToString() ?? "";
+        await ChargerProduitsParCategorie();
+    }
+
+    private string termeRecherche = "";
+    private CancellationTokenSource? _cts;
+
+    private async Task OnRechercheInput(ChangeEventArgs e)
+    {
+        termeRecherche = e.Value?.ToString() ?? "";
+
+        // Annule la recherche précédente
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(300, _cts.Token); // debounce 300ms
+
+            chargement = true;
+
+            if (string.IsNullOrWhiteSpace(termeRecherche))
+            {
+                produits = await ProduitService.ObtenirTousAsync();
+            }
+            else
+            {
+                produits = await ProduitService.RechercherAsync(termeRecherche);
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // normal : nouvelle frappe clavier
+        }
+        finally
+        {
+            chargement = false;
+            StateHasChanged();
+        }
+    }
+
+
+}
+
+<h1 class="fw-bold"><span><i class="bi bi-8-square-fill" style="font-size: 2.25rem;"></i></span> CRUD Complet</h1>
+<hr />
+
+<ProduitCreateModal @bind-Visible="afficherModal" OnProduitCree="Charger" />
+<ProduitEditModal Visible="@afficherModalModifier" VisibleChanged="@(v => afficherModalModifier = v)"  ProduitAModifier="produitAModifier" OnProduitModifie="Charger" />
+<ConfirmModal Visible="@afficherModalConfirm"
+              VisibleChanged="@(v => afficherModalConfirm = v)"
+              NomProduit="@nomProduitASupprimer"
+              OnConfirm="ConfirmerSuppression" />
+
+<!-- Barre de recherche + filtres + boutons -->
+<div class="d-flex justify-content-between align-items-center mb-3 mt-4 gap-2 flex-wrap">
+
+    <!-- Partie gauche -->
+    <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-success d-flex align-items-center py-0 pe-3" @onclick="() => afficherModal = true">
+            <i class="bi bi-plus" style="font-size:1.6rem;"></i> Ajouter
+        </button>
+
+        <button class="btn btn-outline-secondary d-flex align-items-center py-1 pe-3" @onclick="Charger">
+            <i class="bi bi-arrow-clockwise" style="font-size:1.25rem; margin-right: .25rem;"></i> Actualiser
+        </button>
+    </div>
+
+    <!-- Partie droite -->
+    <div class="d-flex align-items-center gap-2">
+        <input type="text"
+               class="form-control"
+               placeholder="Rechercher..."
+               style="width: 200px;"
+               @oninput="OnRechercheInput" />
+
+
+        <select class="form-select" style="width: 200px;" value="@categorieSelectionnee" @onchange="OnCategorieChange">
+            <option value="">Toutes les catégories</option>
+            @foreach (var cat in CategoriesDistinctes)
+            {
+                <option value="@cat">@cat</option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <!-- Header principal de la table -->
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <span class="me-2">📦</span>
+            <strong>Produits</strong>
+        </div>
+        <span class="badge bg-white text-dark px-2 py-1">
+            @produits.Count @((produits.Count > 1) ? "produits" : "produit")
+        </span>
+    </div>
+
+    <!-- Table -->
+    <div class="card-body p-0">
+        @if (chargement)
+        {
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-2">Chargement...</p>
+            </div>
+        }
+        else
+        {
+            <table class="table table-striped table-hover mb-0" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">ID</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Nom</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Prix</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Stock</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Catégorie</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Statut</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in produits)
+                    {
+                        <tr>
+                            <td>@p.Id</td>
+                            <td>@p.Nom</td>
+
+                            <!-- Catégorie avec couleur selon valeur -->
+                            <td>
+                                <span class="badge @GetCategorieBadge(p.Categorie)">
+                                    @p.Categorie
+                                </span>
+                            </td>
+
+                            <td class="text-success fw-bold">@p.Prix.ToString("C")</td>
+
+                            <!-- Stock -->
+                            <td>
+                                <span class="badge @(p.Stock > 0 ? "bg-success" : "bg-danger")">
+                                    @p.Stock
+                                </span>
+                            </td>
+
+                            <!-- Statut -->
+                            <td>
+                                <span class="badge @(p.EstActif ? "bg-success" : "bg-danger")">
+                                    @(p.EstActif ? "Actif" : "Inactif")
+                                </span>
+                            </td>
+                            <!-- Action -->
+                            <td class="d-flex gap-2">
+                                <!-- Modifier -->
+                                <button class="btn btn-sm btn-outline-primary d-flex align-items-center"
+                                        @onclick="() => OuvrirModalModifier(p)">
+                                    <i class="bi bi-pencil-fill me-1"></i>
+                                </button>
+
+                                <!-- Supprimer -->
+                                <button class="btn btn-sm btn-outline-danger d-flex align-items-center"
+                                        @onclick="() => OuvrirModalSupprimer(p)">
+                                    <i class="bi bi-trash-fill me-1"></i>
+                                </button>
+
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+            </table>
+
+
+        }
+
+    </div>
+
+ 
+</div>
+
+
+<ProduitDashboard Produits="produits" />
+
+
+
+

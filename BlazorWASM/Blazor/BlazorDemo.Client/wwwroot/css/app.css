@@ -101,3 +101,7 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.table thead tr th {
+    border-bottom-color: rgba(33, 37, 41, 0.22) !important;
+}
