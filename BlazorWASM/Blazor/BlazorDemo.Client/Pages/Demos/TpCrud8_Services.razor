@@ -199,12 +199,7 @@
 
     <!-- Partie droite -->
     <div class="d-flex align-items-center gap-2">
-        <input type="text"
-               class="form-control"
-               placeholder="Rechercher..."
-               style="width: 200px;"
-               @oninput="OnRechercheInput" />
-
+        <input type="text" class="form-control" placeholder="Rechercher..." style="width: 200px;" @oninput="OnRechercheInput" />
 
         <select class="form-select" style="width: 200px;" value="@categorieSelectionnee" @onchange="OnCategorieChange">
             <option value="">Toutes les catégories</option>
@@ -244,9 +239,9 @@
                     <tr>
                         <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">ID</th>
                         <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Nom</th>
+                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Catégorie</th>
                         <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Prix</th>
                         <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Stock</th>
-                        <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Catégorie</th>
                         <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Statut</th>
                         <th style="border-bottom-color: rgba(33, 37, 41, 0.22) !important;">Actions</th>
                     </tr>
