@@ -123,26 +123,35 @@
     }
 
     private string termeRecherche = "";
+
+    // Source permettant d'annuler une tâche asynchrone en cours (debounce)
     private CancellationTokenSource? _cts;
 
     private async Task OnRechercheInput(ChangeEventArgs e)
     {
+        // Récupère le texte saisi par l'utilisateur
         termeRecherche = e.Value?.ToString() ?? "";
 
-        // Annule la recherche précédente
+        // Annule la recherche précédente si elle existe
+        // (ex: l'utilisateur tape rapidement plusieurs lettres)
         _cts?.Cancel();
+
+        // Crée une nouvelle source de token pour la nouvelle recherche
         _cts = new CancellationTokenSource();
 
         try
         {
+            // Si une nouvelle frappe intervient, cette attente sera annulée
             await Task.Delay(300, _cts.Token); // debounce 300ms
+      
+            chargement = true; // Active l'indicateur de chargement
 
-            chargement = true;
-
+            // Si le champ est vide, on récupère tous les produits
             if (string.IsNullOrWhiteSpace(termeRecherche))
             {
                 produits = await ProduitService.ObtenirTousAsync();
             }
+            // Sinon, on effectue une recherche filtrée
             else
             {
                 produits = await ProduitService.RechercherAsync(termeRecherche);
@@ -150,11 +159,14 @@
         }
         catch (TaskCanceledException)
         {
-            // normal : nouvelle frappe clavier
+            // Exception normale :
+            // elle se produit lorsqu'une nouvelle frappe annule la recherche précédente
         }
         finally
         {
+            // Désactive le chargement même en cas d'annulation
             chargement = false;
+            // Force le rafraîchissement de l'interface Blazor
             StateHasChanged();
         }
     }

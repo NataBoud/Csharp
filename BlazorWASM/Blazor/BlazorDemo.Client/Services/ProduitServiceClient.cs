@@ -53,7 +53,7 @@ public class ProduitServiceClient : IProduitServiceClient
 
     Task<List<Produit>> IProduitServiceClient.ObtenirParCategorieAsync(string categorie)
     {
-        // On appelle l’API côté serveur pour obtenir les produits filtrés
+        //  appel l’API côté serveur pour obtenir les produits filtrés
         return _http.GetFromJsonAsync<List<Produit>>($"api/produits/categorie/{categorie}")!;
     }
 
